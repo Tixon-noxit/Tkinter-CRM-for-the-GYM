@@ -30,6 +30,7 @@ from datetime import timedelta, datetime
 import time
 
 # Парсер заявок
+from mail.postal_data import MAIL, PASSWORD, PASSWORD_MAIL_APP  # Отредактировать данные в файле
 import getpass
 import imaplib
 from html.parser import HTMLParser
@@ -37,36 +38,18 @@ from re import sub
 from sys import stderr
 from traceback import print_exc
 import email
-MAIL = 'udarnik.boxingclub@mail.ru'  # Почта Mail
-PASSWORD = 'boxingworld777'  # Пароль от почты
-PASSWORD_MAIL_APP = 'vFubNyZfL1hxW5trPS3c'  # Пароль для почтового приложения
 
 """ Битрикс24 => Клиенты """
 """ Унифицировать функцию поиска по таблицам """
 
 ADMIN = 'Тихон'
 
-
-###-------------------------------------------------------------------------------------------------------------------------------------------------####
-# Создаем запросы для тестовой базы данных
-with sqlite3.connect('database.db') as db:
-    cursor = db.cursor()
-    query = """CREATE TABLE IF NOT EXISTS treners(Name_Trener TEXT, Position TEXT, Number_of_clients INTEGER)  """
-    query2 = """CREATE TABLE IF NOT EXISTS clients(Name TEXT, Surname TEXT, Paid INTEGER, Trener TEXT)  """
-    query3 = """CREATE TABLE IF NOT EXISTS lockers(id INTEGER, Name TEXT, Sum_lockers INTEGER, Paid_before DATE, Telephone_number INTEGER, Comments TEXT, Status TEXT)  """
-    query4 = """CREATE TABLE IF NOT EXISTS deals(id INTEGER, transaction_stage TEXT, affairs TEXT, client_name TEXT, summ INTEGER, responsible TEXT, create_date DATE)  """
-    contact = """CREATE TABLE IF NOT EXISTS contacts(id INTEGER, First_Name TEXT, Last_Name TEXT, Phone_number TEXT, Type TEXT, Source TEXT, create_date DATE) """
-    cursor.execute(query)
-    cursor.execute(query2)
-    cursor.execute(query3)
-    cursor.execute(query4)
-    cursor.execute(contact)
-    db.commit()
+from settings.settings import LABLE
 
 ###-------------------------------------------------------------------------------------------------------------------------------------------------####
 
 window = Tk()
-window.title("CRM - Ударник Алексеевская")
+window.title(LABLE)
 window.resizable(False, False)
 style = ttk.Style(window)
 style.configure("vista")
@@ -136,14 +119,14 @@ def search_for_table(parent, var, treeview, db_name, table_name, search_value, c
 
 ###-------------------------------------------------------------------------------------------------------------------------------------------------####
 
-def new_clients():
-	# Создать нового клиента в базе данных
-    conn = sqlite3.connect("database.db")
-    cur = conn.cursor()
-    cur.execute("""INSERT INTO clients
-                          (Name, Surname, Paid, Trener)  VALUES  ("Федоров","Филипп", 5000, "Тренер")""")
-    conn.commit()
-    conn.close()
+# def new_clients():
+# 	# Создать нового клиента в базе данных
+#     conn = sqlite3.connect("database.db")
+#     cur = conn.cursor()
+#     cur.execute("""INSERT INTO clients
+#                           (Name, Surname, Paid, Trener)  VALUES  ("Федоров","Филипп", 5000, "Тренер")""")
+#     conn.commit()
+#     conn.close()
 
 ###-------------------------------------------------------------------------------------------------------------------------------------------------####    
 
@@ -829,14 +812,6 @@ def deal_now():
 	tree.bind("<ButtonPress-3>", item_selected)
 ###-------------------------------------------------------------------------------------------------------------------------------------------------####
 
-# def new_treners():
-#     conn = sqlite3.connect("database.db")
-#     cur = conn.cursor()
-#     cur.execute("""INSERT INTO treners
-#                           (Name_Trener, Position, Number_of_clients)  VALUES  ("Ямненко Богдан", "Тренер", 5000)""")
-#     conn.commit()
-#     conn.close()
-
 def new_trener(arg, arg2, arg3, arg4, arg5):
 	# Внести нового тренера в базу данных
 	Trener.create(First_Name=arg, Last_Name=arg2, Phone_number=arg3 , Type=arg4 ,  Source=arg5)    
@@ -1202,10 +1177,6 @@ def inventory_control(): # Окно Складского учета
 	Button_deal2['state']='disabled'
 	Button_deal2.pack(side=tk.LEFT)
 
-	# conn = sqlite3.connect("database.db")
-	# cur = conn.cursor()
-	# cur.execute("SELECT * FROM treners")
-	# rows = cur.fetchall()
 	tree2= ttk.Treeview(frame2, column=("column1", "column2", "column3", "column4",
 										"column5", "column6", "column7", "column8"), show='headings')
 	tree2.heading("#1", text="Название")
