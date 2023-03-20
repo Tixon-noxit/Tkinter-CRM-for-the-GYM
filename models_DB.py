@@ -85,3 +85,12 @@ class Deal(BaseModel): # Сделки
     responsible = CharField() # Изменить на зависимость от Сотрудников
     comment = TextField()
     # ТОВАРЫ - надо как-то прилепить
+    
+    # class Lockers(BaseModel): # Шкафчики
+#     id = PrimaryKeyField(null=False)
+#     Name = CharField(max_length=7)
+#     sum_lockers INTEGER = CharField(max_length=7)
+#     paid_before DATE = CharField(max_length=7)
+#     telephone_number = CharField(max_length=7)
+#     comments = CharField(max_length=7)
+#     status = CharField(max_length=7) 
