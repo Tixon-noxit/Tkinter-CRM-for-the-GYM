@@ -729,7 +729,7 @@ def deal_now():
 			name = entry_search.get()
 			if (len(name) < 2) or (not name.isalpha()):
 				messagebox.showerror("Ошибка!", "Имя указано не верно!")
-				history_deal()
+				deal_now()
 			else:
 				core.execute(db %(name))
 				data = core.fetchall()
