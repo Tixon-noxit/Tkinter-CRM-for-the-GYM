@@ -437,18 +437,23 @@ def create_deal():
 	# left = Label(frame, text="05.02.2023")
 	# left.pack(side='right')
 
-	countries = [
-		'Antigua and Barbuda', 'Bahamas','Barbados','Belize', 'Canada',
-		'Costa Rica ', 'Cuba', 'Dominica', 'Dominican Republic', 'El Salvador ',
-		'Grenada', 'Guatemala ', 'Haiti', 'Honduras ', 'Jamaica', 'Mexico',
-		'Nicaragua', 'Saint Kitts and Nevis', 'Panama ', 'Saint Lucia',
-		'Saint Vincent and the Grenadines', 'Trinidad and Tobago', 'United States of America'
-		]
+	# countries = [
+	# 	'Antigua and Barbuda', 'Bahamas','Barbados','Belize', 'Canada',
+	# 	'Costa Rica ', 'Cuba', 'Dominica', 'Dominican Republic', 'El Salvador ',
+	# 	'Grenada', 'Guatemala ', 'Haiti', 'Honduras ', 'Jamaica', 'Mexico',
+	# 	'Nicaragua', 'Saint Kitts and Nevis', 'Panama ', 'Saint Lucia',
+	# 	'Saint Vincent and the Grenadines', 'Trinidad and Tobago', 'United States of America'
+	# 	]
+
+	countries =	[]
+
+	for cl in Contact.select():
+		countries.append(f'{cl.First_Name} {cl.Last_Name}')
 
 	def check_input(event):
 		value = event.widget.get()
 		data = []
-		
+
 		if len(event.keysym) == 1:
 			event.widget.autocomplete()
 
@@ -466,16 +471,10 @@ def create_deal():
 
 	left = Label(labelframe2, text="Контакт")
 	left.pack()
-	entry = AutocompleteCombobox(
-    labelframe2,
-    width=30,
-    # font=('Times', 18),
-    completevalues=countries
-    )
+	entry = AutocompleteCombobox(labelframe2, width=30, completevalues=countries)
 	entry.bind('<KeyRelease>', check_input)
 	entry.pack(side=tk.RIGHT)
-	# Button_contact = tk.Button(master=labelframe2, text='Выбрать существующий', command=contact_selection)
-	# Button_contact.pack(side=tk.RIGHT)
+
 
 
 
