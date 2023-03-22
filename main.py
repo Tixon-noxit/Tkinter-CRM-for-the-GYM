@@ -607,7 +607,7 @@ def history_deal():
 										t.responsible, t.comment))
 
 	# Поиск по указанной таблице
-	def search_deal():
+	def search_deal_history():
 		tree.selection()
 		fetchdata = tree.get_children()
 		for f in fetchdata:
@@ -622,7 +622,7 @@ def history_deal():
 			name = entry_search.get()
 			if (len(name) < 2) or (not name.isalpha()):
 				messagebox.showerror("Ошибка!", "Имя указано не верно!")
-				deal()
+				history_deal()
 			else:
 				core.execute(db %(name))
 				data = core.fetchall()
@@ -638,11 +638,12 @@ def history_deal():
 
 	entry_search = Entry(frame_deal, width=50)
 	entry_search.pack(side=tk.LEFT, pady=6, padx=6)
-	Button_clients2 = tk.Button(master=frame_deal, text='Найти', command=lambda: search_deal())
+	Button_clients2 = tk.Button(master=frame_deal, text='Найти', command=lambda: search_deal_history())
 	Button_clients2.pack(side=tk.LEFT)
+
 	def reset_search():
 		entry_search.delete("0", END)
-		deal_now()
+		history_deal()
 	Button_clients2 = tk.Button(master=frame_deal, text='Очистить', command=reset_search)
 	Button_clients2.pack(side=tk.LEFT)
 
@@ -728,7 +729,7 @@ def deal_now():
 			name = entry_search.get()
 			if (len(name) < 2) or (not name.isalpha()):
 				messagebox.showerror("Ошибка!", "Имя указано не верно!")
-				deal()
+				history_deal()
 			else:
 				core.execute(db %(name))
 				data = core.fetchall()
