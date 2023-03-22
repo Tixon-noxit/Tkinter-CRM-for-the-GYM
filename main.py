@@ -5,6 +5,7 @@ from tkinter.ttk import Combobox
 from tkcalendar import Calendar, DateEntry 
 import sqlite3
 from peewee import *
+from ttkwidgets.autocomplete import AutocompleteCombobox
 
 # Data Base
 from models_DB import *
@@ -436,13 +437,45 @@ def create_deal():
 	# left = Label(frame, text="05.02.2023")
 	# left.pack(side='right')
 
+	countries = [
+		'Antigua and Barbuda', 'Bahamas','Barbados','Belize', 'Canada',
+		'Costa Rica ', 'Cuba', 'Dominica', 'Dominican Republic', 'El Salvador ',
+		'Grenada', 'Guatemala ', 'Haiti', 'Honduras ', 'Jamaica', 'Mexico',
+		'Nicaragua', 'Saint Kitts and Nevis', 'Panama ', 'Saint Lucia',
+		'Saint Vincent and the Grenadines', 'Trinidad and Tobago', 'United States of America'
+		]
+
+	def check_input(event):
+		value = event.widget.get()
+		data = []
+		
+		if len(event.keysym) == 1:
+			event.widget.autocomplete()
+
+		if value == '':
+			entry['values'] = countries
+		else:
+			data = []
+		for item in countries:
+			if value.lower() in item[0:len(value)].lower():
+				data.append(item)
+		entry['values'] = data	
 
 	labelframe2 = LabelFrame(labelframe, text="Клиент")
-	labelframe2.pack(fill="both", expand="yes") 
+	labelframe2.pack(fill="both", expand="yes")
+
 	left = Label(labelframe2, text="Контакт")
 	left.pack()
-	Button_contact = tk.Button(master=labelframe2, text='Выбрать существующий', command=contact_selection)
-	Button_contact.pack(side=tk.RIGHT)
+	entry = AutocompleteCombobox(
+    labelframe2,
+    width=30,
+    # font=('Times', 18),
+    completevalues=countries
+    )
+	entry.bind('<KeyRelease>', check_input)
+	entry.pack(side=tk.RIGHT)
+	# Button_contact = tk.Button(master=labelframe2, text='Выбрать существующий', command=contact_selection)
+	# Button_contact.pack(side=tk.RIGHT)
 
 
 
