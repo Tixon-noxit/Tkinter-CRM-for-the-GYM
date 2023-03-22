@@ -195,6 +195,7 @@ def create_contact():
 	labelframe5.pack(fill="both", expand="yes")
 	frame = tk.Frame(labelframe5)
 	frame.pack(side='top')
+
 	def call_new_contact():
 		arg = entry_1.get()
 		arg2 = entry_2.get()
@@ -206,10 +207,12 @@ def create_contact():
 		entry_2.delete("0", END)
 		entry_3.delete("0", END)
 		combobox_1.delete("0", END)
-		combobox_2.delete("0", END)	
+		combobox_2.delete("0", END)
+
 	def close_create_contact():
 		clear_frame2()
 		clients()	
+
 	Button_deal = tk.Button(master=frame, text='Сохранить', command=call_new_contact)
 	Button_deal.pack(side=tk.LEFT)
 	Button_deal2 = tk.Button(master=frame, text='Отмена', command=close_create_contact)
@@ -217,7 +220,6 @@ def create_contact():
 
 
 def contacts():
-	# pass
 	clear_frame2()
 	frame_clients = tk.Frame(master=frame2, width=200, height=100, bg=color_frame_menu)
 	frame_clients.pack(side=tk.TOP, fill='both')	
@@ -246,13 +248,11 @@ def contacts():
 	tree2.heading("#7", text="Дата создания")
 	tree2.pack(expand=1, anchor=NW, fill="both")
 	for row in rows:
-		# print(row) # it print all records in the database
 		tree2.insert("", tk.END, values=row)
 	conn.close()
 
 
 def provider(): # Окно поставщиков
-	# pass
 	clear_frame2()
 	frame_clients = tk.Frame(master=frame2, width=200, height=100, bg=color_frame_menu)
 	frame_clients.pack(side=tk.TOP, fill='both')	
@@ -307,7 +307,6 @@ def clients():
 	tree2.column("#4", minwidth=50, width=120)
 	tree2.pack(expand=1, anchor=NW, fill="both")
 	for row in rows:
-		# print(row) # it print all records in the database
 		tree2.insert("", tk.END, values=row)
 	conn.close()
 	search_for_table(frame_clients, 2, tree2, 'organization.db', 'Contact', 'First_Name', 'Type', 'Клиент',  clients)
@@ -424,8 +423,6 @@ def create_deal():
 	combobox_st = ttk.Combobox(frame, values=languages, width=48)
 	combobox_st.current(0)
 	combobox_st.pack(side='right', pady=6, padx=6)
-	# left = Label(frame, text="Новая")
-	# left.pack(side='right')
 
 	frame = tk.Frame(labelframe2)
 	frame.pack(side='left', padx=15)
@@ -434,8 +431,6 @@ def create_deal():
 	cal_date = DateEntry(frame, width=12, background='darkblue', locale='ru_RU',
 					foreground='white', borderwidth=2, year=2023)
 	cal_date.pack(padx=10, pady=10)
-	# left = Label(frame, text="05.02.2023")
-	# left.pack(side='right')
 
 	# countries = [
 	# 	'Antigua and Barbuda', 'Bahamas','Barbados','Belize', 'Canada',
@@ -458,22 +453,22 @@ def create_deal():
 			event.widget.autocomplete()
 
 		if value == '':
-			entry['values'] = countries
+			combobox_cont['values'] = countries
 		else:
 			data = []
 		for item in countries:
 			if value.lower() in item[0:len(value)].lower():
 				data.append(item)
-		entry['values'] = data	
+		combobox_cont['values'] = data	
 
 	labelframe2 = LabelFrame(labelframe, text="Клиент")
 	labelframe2.pack(fill="both", expand="yes")
 
 	left = Label(labelframe2, text="Контакт")
 	left.pack()
-	entry = AutocompleteCombobox(labelframe2, width=30, completevalues=countries)
-	entry.bind('<KeyRelease>', check_input)
-	entry.pack(side=tk.RIGHT)
+	combobox_cont = AutocompleteCombobox(labelframe2, width=30, completevalues=countries)
+	combobox_cont.bind('<KeyRelease>', check_input)
+	combobox_cont.pack(side=tk.RIGHT)
 
 
 
@@ -535,7 +530,6 @@ def create_deal():
 	frame.pack(side='top')
 
 	def add_deal():
-		# if 
 		summ = summ_entr.get()
 		stady = combobox_st.get()
 		date = cal_date.get()
@@ -555,14 +549,19 @@ def create_deal():
 		comment_entry.delete("0", END) 
 		# combobox_responsible.delete("0", END)
 		frame_deal.destroy()
+		cancellation_deal()
+
 	def cancellation_deal():
 		clear_frame2()
 		history_deal()	
+
+	frame.bind('<Return>', Button_deal)	
 	Button_deal = tk.Button(master=frame, text='Сохранить', command=add_deal)
 	Button_deal.pack(side=tk.LEFT)
 	Button_deal2 = tk.Button(master=frame, text='Отмена', command=cancellation_deal)
 	Button_deal2.pack(side=tk.RIGHT)
 
+	
 	# При нажатии на Enter Сохранять сделку
 
 def history_deal():
@@ -643,7 +642,7 @@ def history_deal():
 	Button_clients2.pack(side=tk.LEFT)
 	def reset_search():
 		entry_search.delete("0", END)
-		history_deal()
+		deal_now()
 	Button_clients2 = tk.Button(master=frame_deal, text='Очистить', command=reset_search)
 	Button_clients2.pack(side=tk.LEFT)
 
@@ -749,7 +748,7 @@ def deal_now():
 	Button_clients2.pack(side=tk.LEFT)
 	def reset_search():
 		entry_search.delete("0", END)
-		deal()
+		deal_now()
 	Button_clients2 = tk.Button(master=frame_deal, text='Очистить', command=reset_search)
 	Button_clients2.pack(side=tk.LEFT)
 
