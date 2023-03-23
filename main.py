@@ -40,7 +40,7 @@ from sys import stderr
 from traceback import print_exc
 import email
 
-from views import clear_widget
+from views import clear_widget  # search_for_table
 
 """ Битрикс24 => Клиенты """
 """ Унифицировать функцию поиска по таблицам """
@@ -106,6 +106,7 @@ def search_for_table(parent, var, treeview, db_name, table_name, search_value, c
 	entry_search.pack(side=tk.LEFT, pady=6, padx=6)
 	Button_clients2 = tk.Button(master=parent, text='Найти', command=lambda: search(treeview, entry_search, db_name, table_name, column_var))
 	Button_clients2.pack(side=tk.LEFT)
+
 	def reset_search():
 		entry_search.delete("0", END)
 		function()
@@ -133,9 +134,6 @@ def create_contact():
 	clear_widget(work_frame)
 	frame_contact = tk.Frame(master=work_frame, width=200, height=100, bg=color_frame_menu)
 	frame_contact.pack(side=tk.TOP, fill='both')
-
-	# frame_label_deal = Label(frame_deal, text='Создаем сделку')
-	# frame_label_deal.pack()
 
 	labelframe = LabelFrame(frame_contact, text="Новый контакт")
 	labelframe.pack(fill="both", expand="yes")
