@@ -66,9 +66,9 @@ height = window.winfo_screenheight()  # Высота окна
 
 ###-------------------------------------------------------------------------------------------------------------------------------------------------####
 
-def clear_frame2():
+def clear_work_frame():
 	# Очистка рабочего окна 
-	for widget in frame2.winfo_children():
+	for widget in work_frame.winfo_children():
 		widget.destroy()
 
 ###-------------------------------------------------------------------------------------------------------------------------------------------------####
@@ -136,8 +136,8 @@ def new_contact(arg, arg2, arg3, arg4, arg5):
 	Contact.create(First_Name=arg, Last_Name=arg2, Phone_number=arg3 , Type=arg4 ,  Source=arg5)
 
 def create_contact():
-	clear_frame2()
-	frame_contact = tk.Frame(master=frame2, width=200, height=100, bg=color_frame_menu)
+	clear_work_frame()
+	frame_contact = tk.Frame(master=work_frame, width=200, height=100, bg=color_frame_menu)
 	frame_contact.pack(side=tk.TOP, fill='both')
 
 	# frame_label_deal = Label(frame_deal, text='Создаем сделку')
@@ -146,34 +146,34 @@ def create_contact():
 	labelframe = LabelFrame(frame_contact, text="Новый контакт")
 	labelframe.pack(fill="both", expand="yes")
  
-	labelframe2 = LabelFrame(labelframe, text="О контакте")
-	labelframe2.pack(fill="both", expand="yes") 
+	labelwork_frame = LabelFrame(labelframe, text="О контакте")
+	labelwork_frame.pack(fill="both", expand="yes") 
 
-	frame = tk.Frame(labelframe2)
+	frame = tk.Frame(labelwork_work_frame)
 	frame.pack(anchor='w')
 	left = Label(frame, text="Фамилия")
 	left.pack(side='left')
 	entry_1 = Entry(frame, width=50)
 	entry_1.pack(side='right', pady=6, padx=6)
 
-	frame = tk.Frame(labelframe2)
+	frame = tk.Frame(labelwork_frame)
 	frame.pack(anchor='w')
 	left = Label(frame, text="Имя")
 	left.pack(side='left')
 	entry_2 = Entry(frame, width=50)
 	entry_2.pack(side='right', pady=6, padx=6)
 
-	frame = tk.Frame(labelframe2)
+	frame = tk.Frame(labelwork_frame)
 	frame.pack(anchor='w')
 	left = Label(frame, text="Телефон")
 	left.pack(side='left')
 	entry_3 = Entry(frame, width=50)
 	entry_3.pack(side='right', pady=6, padx=6)
 
-	labelframe2 = LabelFrame(labelframe, text="Дополнительно")
-	labelframe2.pack(fill="both", expand="yes") 
+	labelwork_frame = LabelFrame(labelframe, text="Дополнительно")
+	labelwork_frame.pack(fill="both", expand="yes") 
 
-	frame = tk.Frame(labelframe2)
+	frame = tk.Frame(labelwork_frame)
 	frame.pack(anchor='w')
 	left = Label(frame, text="Тип")
 	left.pack(side='left')
@@ -182,7 +182,7 @@ def create_contact():
 	combobox_1.current(0)
 	combobox_1.pack(side='right', pady=6, padx=6)
 
-	frame = tk.Frame(labelframe2)
+	frame = tk.Frame(labelwork_frame)
 	frame.pack(anchor='w')
 	left = Label(frame, text="Источник")
 	left.pack(side='left')
@@ -210,7 +210,7 @@ def create_contact():
 		combobox_2.delete("0", END)
 
 	def close_create_contact():
-		clear_frame2()
+		clear_work_frame()
 		clients()	
 
 	Button_deal = tk.Button(master=frame, text='Сохранить', command=call_new_contact)
@@ -220,8 +220,8 @@ def create_contact():
 
 
 def contacts():
-	clear_frame2()
-	frame_clients = tk.Frame(master=frame2, width=200, height=100, bg=color_frame_menu)
+	clear_work_frame()
+	frame_clients = tk.Frame(master=work_frame, width=200, height=100, bg=color_frame_menu)
 	frame_clients.pack(side=tk.TOP, fill='both')	
 	Button_clients = tk.Button(master=frame_clients, text='Добавить', command=create_contact)
 	Button_clients.pack(side=tk.LEFT)
@@ -234,7 +234,7 @@ def contacts():
 	cur = conn.cursor()
 	cur.execute("SELECT * FROM contact ORDER BY create_date DESC")
 	rows = cur.fetchall()
-	tree2= ttk.Treeview(frame2, column=("column1", "column2", "column3", "column4", "column5", "column6", "column6"), show='headings')
+	tree2= ttk.Treeview(work_frame, column=("column1", "column2", "column3", "column4", "column5", "column6", "column6"), show='headings')
 	tree2.heading("#1", text="id")
 	tree2.column("#1", minwidth=40, width=40)
 	tree2.heading("#2", text="Фамилия")
@@ -253,8 +253,8 @@ def contacts():
 
 
 def provider(): # Окно поставщиков
-	clear_frame2()
-	frame_clients = tk.Frame(master=frame2, width=200, height=100, bg=color_frame_menu)
+	clear_work_frame()
+	frame_clients = tk.Frame(master=work_frame, width=200, height=100, bg=color_frame_menu)
 	frame_clients.pack(side=tk.TOP, fill='both')	
 	Button_clients = tk.Button(master=frame_clients, text='Добавить', command=create_contact)
 	Button_clients.pack(side=tk.LEFT)
@@ -265,7 +265,7 @@ def provider(): # Окно поставщиков
 	cur = conn.cursor()
 	cur.execute("SELECT * FROM contact WHERE Type='Поставщик'")
 	rows = cur.fetchall()
-	tree2= ttk.Treeview(frame2, column=("column1", "column2", "column3", "column4", "column5", "column6", "column6"), show='headings')
+	tree2= ttk.Treeview(work_frame, column=("column1", "column2", "column3", "column4", "column5", "column6", "column6"), show='headings')
 	tree2.heading("#1", text="id")
 	tree2.column("#1", minwidth=40, width=40)
 	tree2.heading("#2", text="Фамилия")
@@ -285,8 +285,8 @@ def provider(): # Окно поставщиков
 
 
 def clients():
-	clear_frame2()
-	frame_clients = tk.Frame(master=frame2, width=200, height=100, bg=color_frame_menu)
+	clear_work_frame()
+	frame_clients = tk.Frame(master=work_frame, width=200, height=100, bg=color_frame_menu)
 	frame_clients.pack(side=tk.TOP, fill='both')	
 	Button_clients = tk.Button(master=frame_clients, text='Контакты', command=contacts)
 	Button_clients.pack(side=tk.LEFT)
@@ -298,7 +298,7 @@ def clients():
 	cur = conn.cursor()
 	cur.execute("SELECT * FROM contact WHERE Type='Клиент' ORDER BY create_date DESC")
 	rows = cur.fetchall()
-	tree2= ttk.Treeview(frame2, column=("column1", "column2", "column3", "column4"), show='headings')
+	tree2= ttk.Treeview(work_frame, column=("column1", "column2", "column3", "column4"), show='headings')
 	tree2.heading("#1", text="id")
 	tree2.column("#1", minwidth=20, width=30)
 	tree2.heading("#2", text="Фамилия")
@@ -313,7 +313,7 @@ def clients():
 
 ###-------------------------------------------------------------------------------------------------------------------------------------------------####
 def contact_selection():
-	clear_frame2()
+	clear_work_frame()
 	a = tk.Toplevel()
 	a.geometry("750x700+400+50")
 	a.resizable(0, 0)
@@ -395,17 +395,17 @@ def new_deal(arg, arg2, arg3, arg4, arg5, arg6,	arg7, arg8, arg9):
 				comment=arg9)
 
 def create_deal():
-	clear_frame2()
-	frame_deal = tk.Frame(master=frame2, width=200, height=100, bg=color_frame_menu)
+	clear_work_frame()
+	frame_deal = tk.Frame(master=work_frame, width=200, height=100, bg=color_frame_menu)
 	frame_deal.pack(side=tk.TOP, fill='both')
 
 	labelframe = LabelFrame(frame_deal, text="Новая Сделка")
 	labelframe.pack(fill="both", expand="yes")
  
-	labelframe2 = LabelFrame(labelframe, text="О сделке")
-	labelframe2.pack(fill="both", expand="yes") 
+	labelwork_frame = LabelFrame(labelframe, text="О сделке")
+	labelwork_frame.pack(fill="both", expand="yes") 
 
-	frame = tk.Frame(labelframe2)
+	frame = tk.Frame(labelwork_frame)
 	frame.pack()
 	left = Label(frame, text="Сумма")
 	left.pack(side='left')
@@ -414,7 +414,7 @@ def create_deal():
 	#left = Label(frame, text="6500")
 	#left.pack(side='right')
 
-	frame = tk.Frame(labelframe2)
+	frame = tk.Frame(labelwork_frame)
 	frame.pack()
 	left = Label(frame, text="Стадия ")
 	left.pack(side='left')
@@ -424,7 +424,7 @@ def create_deal():
 	combobox_st.current(0)
 	combobox_st.pack(side='right', pady=6, padx=6)
 
-	frame = tk.Frame(labelframe2)
+	frame = tk.Frame(labelwork_frame)
 	frame.pack(side='left', padx=15)
 	left = Label(frame, text="Дата    ")
 	left.pack(side='left')
@@ -461,19 +461,19 @@ def create_deal():
 				data.append(item)
 		combobox_cont['values'] = data	
 
-	labelframe2 = LabelFrame(labelframe, text="Клиент")
-	labelframe2.pack(fill="both", expand="yes")
+	labelwork_frame = LabelFrame(labelframe, text="Клиент")
+	labelwork_frame.pack(fill="both", expand="yes")
 
-	left = Label(labelframe2, text="Контакт")
+	left = Label(labelwork_frame, text="Контакт")
 	left.pack()
-	combobox_cont = AutocompleteCombobox(labelframe2, width=30, completevalues=countries)
+	combobox_cont = AutocompleteCombobox(labelwork_frame, width=30, completevalues=countries)
 	combobox_cont.bind('<KeyRelease>', check_input)
 	combobox_cont.pack(side=tk.RIGHT)
 
 
 
 
-	Button_deal = tk.Button(master=labelframe2, text='Создать Контакт', command=create_contact)
+	Button_deal = tk.Button(master=labelwork_frame, text='Создать Контакт', command=create_contact)
 	Button_deal.pack(side=tk.LEFT)
 
 	labelframe3 = LabelFrame(labelframe, text="Дополнительно")
@@ -552,7 +552,7 @@ def create_deal():
 		cancellation_deal()
 
 	def cancellation_deal():
-		clear_frame2()
+		clear_work_frame()
 		history_deal()	
 
 	frame.bind('<Return>', Button_deal)	
@@ -565,9 +565,9 @@ def create_deal():
 	# При нажатии на Enter Сохранять сделку
 
 def history_deal():
-	clear_frame2()
+	clear_work_frame()
 	
-	frame_deal = tk.Frame(master=frame2, width=200, height=100, bg=color_frame_menu)
+	frame_deal = tk.Frame(master=work_frame, width=200, height=100, bg=color_frame_menu)
 	frame_deal.pack(side=tk.TOP, fill='both')
 	Button_deal = tk.Button(master=frame_deal, text='Создать сделку', command=create_deal)
 	Button_deal.pack(side=tk.LEFT)
@@ -575,7 +575,7 @@ def history_deal():
 	Button_deal2.pack(side=tk.LEFT)
 	
 
-	tree = ttk.Treeview(frame2, column=("column1", "column2", "column3", "column4", "column5", "column6", "column7", "column8", "column9", "column10", "column11"), show ='headings')
+	tree = ttk.Treeview(work_frame, column=("column1", "column2", "column3", "column4", "column5", "column6", "column7", "column8", "column9", "column10", "column11"), show ='headings')
 	tree.heading("#1", text="id")
 	tree.column("#1", minwidth=0, width=20)
 	tree.heading("#2", text="Сумма")
@@ -607,7 +607,7 @@ def history_deal():
 										t.responsible, t.comment))
 
 	# Поиск по указанной таблице
-	def search_deal_history():
+	def search_deal():
 		tree.selection()
 		fetchdata = tree.get_children()
 		for f in fetchdata:
@@ -622,7 +622,7 @@ def history_deal():
 			name = entry_search.get()
 			if (len(name) < 2) or (not name.isalpha()):
 				messagebox.showerror("Ошибка!", "Имя указано не верно!")
-				history_deal()
+				deal()
 			else:
 				core.execute(db %(name))
 				data = core.fetchall()
@@ -638,12 +638,11 @@ def history_deal():
 
 	entry_search = Entry(frame_deal, width=50)
 	entry_search.pack(side=tk.LEFT, pady=6, padx=6)
-	Button_clients2 = tk.Button(master=frame_deal, text='Найти', command=lambda: search_deal_history())
+	Button_clients2 = tk.Button(master=frame_deal, text='Найти', command=lambda: search_deal())
 	Button_clients2.pack(side=tk.LEFT)
-
 	def reset_search():
 		entry_search.delete("0", END)
-		history_deal()
+		deal_now()
 	Button_clients2 = tk.Button(master=frame_deal, text='Очистить', command=reset_search)
 	Button_clients2.pack(side=tk.LEFT)
 
@@ -665,9 +664,9 @@ def history_deal():
 
 
 def deal_now():
-	clear_frame2()
+	clear_work_frame()
 	
-	frame_deal = tk.Frame(master=frame2, width=200, height=100, bg=color_frame_menu)
+	frame_deal = tk.Frame(master=work_frame, width=200, height=100, bg=color_frame_menu)
 	frame_deal.pack(side=tk.TOP, fill='both')
 	Button_deal = tk.Button(master=frame_deal, text='Создать сделку', command=create_deal)
 	Button_deal.pack(side=tk.LEFT)
@@ -678,7 +677,7 @@ def deal_now():
 	# Button_deal2.pack(side=tk.LEFT)
 
 	
-	tree = ttk.Treeview(frame2, column=("column1", "column2", "column3", "column4", "column5", "column6", "column7", "column8", "column9", "column10", "column11"), show ='headings')
+	tree = ttk.Treeview(work_frame, column=("column1", "column2", "column3", "column4", "column5", "column6", "column7", "column8", "column9", "column10", "column11"), show ='headings')
 	tree.heading("#1", text="id")
 	tree.column("#1", minwidth=0, width=20)
 	tree.heading("#2", text="Сумма")
@@ -729,7 +728,7 @@ def deal_now():
 			name = entry_search.get()
 			if (len(name) < 2) or (not name.isalpha()):
 				messagebox.showerror("Ошибка!", "Имя указано не верно!")
-				deal_now()
+				deal()
 			else:
 				core.execute(db %(name))
 				data = core.fetchall()
@@ -849,8 +848,8 @@ def new_trener(arg, arg2, arg3, arg4, arg5):
 	Trener.create(First_Name=arg, Last_Name=arg2, Phone_number=arg3 , Type=arg4 ,  Source=arg5)    
 
 def create_trener():
-	clear_frame2()
-	frame_deal = tk.Frame(master=frame2, width=200, height=100, bg=color_frame_menu)
+	clear_work_frame()
+	frame_deal = tk.Frame(master=work_frame, width=200, height=100, bg=color_frame_menu)
 	frame_deal.pack(side=tk.TOP, fill='both')
 
 	# frame_label_deal = Label(frame_deal, text='Создаем сделку')
@@ -859,34 +858,34 @@ def create_trener():
 	labelframe = LabelFrame(frame_deal, text="Новый Тренер")
 	labelframe.pack(fill="both", expand="yes")
  
-	labelframe2 = LabelFrame(labelframe, text="О Тренере")
-	labelframe2.pack(fill="both", expand="yes") 
+	labelwork_frame = LabelFrame(labelframe, text="О Тренере")
+	labelwork_frame.pack(fill="both", expand="yes") 
 
-	frame = tk.Frame(labelframe2)
+	frame = tk.Frame(labelwork_frame)
 	frame.pack(anchor='w')
 	left = Label(frame, text="Фамилия")
 	left.pack(side='left')
 	entry_1 = Entry(frame, width=50)
 	entry_1.pack(side='right', pady=6, padx=6)
 
-	frame = tk.Frame(labelframe2)
+	frame = tk.Frame(labelwork_frame)
 	frame.pack(anchor='w')
 	left = Label(frame, text="Имя")
 	left.pack(side='left')
 	entry_2 = Entry(frame, width=50)
 	entry_2.pack(side='right', pady=6, padx=6)
 
-	frame = tk.Frame(labelframe2)
+	frame = tk.Frame(labelwork_frame)
 	frame.pack(anchor='w')
 	left = Label(frame, text="Телефон")
 	left.pack(side='left')
 	entry_3 = Entry(frame, width=50)
 	entry_3.pack(side='right', pady=6, padx=6)
 
-	labelframe2 = LabelFrame(labelframe, text="Дополнительно")
-	labelframe2.pack(fill="both", expand="yes") 
+	labelwork_frame = LabelFrame(labelframe, text="Дополнительно")
+	labelwork_frame.pack(fill="both", expand="yes") 
 
-	frame = tk.Frame(labelframe2)
+	frame = tk.Frame(labelwork_frame)
 	frame.pack(anchor='w')
 	left = Label(frame, text="Тип")
 	left.pack(side='left')
@@ -895,7 +894,7 @@ def create_trener():
 	combobox_trn.current(0)
 	combobox_trn.pack(side='right', pady=6, padx=6)
 
-	frame = tk.Frame(labelframe2)
+	frame = tk.Frame(labelwork_frame)
 	frame.pack(anchor='w')
 	left = Label(frame, text="Источник")
 	left.pack(side='left')
@@ -922,14 +921,14 @@ def create_trener():
 		combobox_2.delete("0", END)	
 	Button_deal = tk.Button(master=frame, text='Сохранить', command=call_new_trener)
 	Button_deal.pack(side=tk.LEFT)
-	Button_deal2 = tk.Button(master=frame, text='Отмена', command=clear_frame2)
+	Button_deal2 = tk.Button(master=frame, text='Отмена', command=clear_work_frame)
 	Button_deal2.pack(side=tk.RIGHT)
 
 
 
 def treners():
-	clear_frame2()
-	frame_clients = tk.Frame(master=frame2, width=200, height=100, bg=color_frame_menu)
+	clear_work_frame()
+	frame_clients = tk.Frame(master=work_frame, width=200, height=100, bg=color_frame_menu)
 	frame_clients.pack(side=tk.TOP, fill='both')	
 	Button_clients = tk.Button(master=frame_clients, text='Добавить', command=create_trener)
 	Button_clients.pack(side=tk.LEFT)
@@ -940,7 +939,7 @@ def treners():
 	cur = conn.cursor()
 	cur.execute("SELECT * FROM trener")
 	rows = cur.fetchall()
-	tree2= ttk.Treeview(frame2, column=("column1", "column2", "column3", "column4", "column5", "column6", "column7"), show='headings')
+	tree2= ttk.Treeview(work_frame, column=("column1", "column2", "column3", "column4", "column5", "column6", "column7"), show='headings')
 	tree2.heading("#1", text="id")
 	tree2.column("#1", minwidth=40, width=50)
 	tree2.heading("#2", text="Фамилия")
@@ -963,8 +962,8 @@ def new_staff(arg,arg2,arg3,arg4,arg5):
 
 
 def create_staff():
-	clear_frame2()
-	frame_deal = tk.Frame(master=frame2, width=200, height=100, bg=color_frame_menu)
+	clear_work_frame()
+	frame_deal = tk.Frame(master=work_frame, width=200, height=100, bg=color_frame_menu)
 	frame_deal.pack(side=tk.TOP, fill='both')
 
 	# frame_label_deal = Label(frame_deal, text='Создаем сделку')
@@ -973,34 +972,34 @@ def create_staff():
 	labelframe = LabelFrame(frame_deal, text="Новый Тренер")
 	labelframe.pack(fill="both", expand="yes")
  
-	labelframe2 = LabelFrame(labelframe, text="О Тренере")
-	labelframe2.pack(fill="both", expand="yes") 
+	labelwork_frame = LabelFrame(labelframe, text="О Тренере")
+	labelwork_frame.pack(fill="both", expand="yes") 
 
-	frame = tk.Frame(labelframe2)
+	frame = tk.Frame(labelwork_frame)
 	frame.pack(anchor='w')
 	left = Label(frame, text="Фамилия")
 	left.pack(side='left')
 	entry_1 = Entry(frame, width=50)
 	entry_1.pack(side='right', pady=6, padx=6)
 
-	frame = tk.Frame(labelframe2)
+	frame = tk.Frame(labelwork_frame)
 	frame.pack(anchor='w')
 	left = Label(frame, text="Имя")
 	left.pack(side='left')
 	entry_2 = Entry(frame, width=50)
 	entry_2.pack(side='right', pady=6, padx=6)
 
-	frame = tk.Frame(labelframe2)
+	frame = tk.Frame(labelwork_frame)
 	frame.pack(anchor='w')
 	left = Label(frame, text="Телефон")
 	left.pack(side='left')
 	entry_3 = Entry(frame, width=50)
 	entry_3.pack(side='right', pady=6, padx=6)
 
-	labelframe2 = LabelFrame(labelframe, text="Дополнительно")
-	labelframe2.pack(fill="both", expand="yes") 
+	labelwork_frame = LabelFrame(labelframe, text="Дополнительно")
+	labelwork_frame.pack(fill="both", expand="yes") 
 
-	frame = tk.Frame(labelframe2)
+	frame = tk.Frame(labelwork_frame)
 	frame.pack(anchor='w')
 	left = Label(frame, text="Тип")
 	left.pack(side='left')
@@ -1009,7 +1008,7 @@ def create_staff():
 	combobox_adm.current(0)
 	combobox_adm.pack(side='right', pady=6, padx=6)
 
-	frame = tk.Frame(labelframe2)
+	frame = tk.Frame(labelwork_frame)
 	frame.pack(anchor='w')
 	left = Label(frame, text="Источник")
 	left.pack(side='left')
@@ -1036,14 +1035,14 @@ def create_staff():
 		combobox_2.delete("0", END)	
 	Button_deal = tk.Button(master=frame, text='Сохранить', command=call_new_staff)
 	Button_deal.pack(side=tk.LEFT)
-	Button_deal2 = tk.Button(master=frame, text='Отмена', command=clear_frame2)
+	Button_deal2 = tk.Button(master=frame, text='Отмена', command=clear_work_frame)
 	Button_deal2.pack(side=tk.RIGHT)
 
 
 
 def staff():
-	clear_frame2()
-	frame_clients = tk.Frame(master=frame2, width=200, height=100, bg=color_frame_menu)
+	clear_work_frame()
+	frame_clients = tk.Frame(master=work_frame, width=200, height=100, bg=color_frame_menu)
 	frame_clients.pack(side=tk.TOP, fill='both')	
 	Button_clients = tk.Button(master=frame_clients, text='Добавить', command=create_staff)
 	Button_clients.pack(side=tk.LEFT)
@@ -1054,7 +1053,7 @@ def staff():
 	cur = conn.cursor()
 	cur.execute("SELECT * FROM staff")
 	rows = cur.fetchall()
-	tree2= ttk.Treeview(frame2, column=("column1", "column2", "column3", "column4", "column5", "column6", "column7"), show='headings')
+	tree2= ttk.Treeview(work_frame, column=("column1", "column2", "column3", "column4", "column5", "column6", "column7"), show='headings')
 	tree2.heading("#1", text="id")
 	tree2.column("#1", minwidth=40, width=50)
 	tree2.heading("#2", text="Фамилия")
@@ -1076,8 +1075,8 @@ def new_warehouse(arg,arg2,arg3,arg4,arg5,arg6,arg7):
 	Warehouse.create(name=arg, description=arg2, unit=arg3 , purchase_price=arg4 ,  retail_price=arg5, quantity=arg6, reserved=arg7)
 
 def create_warehous():
-	clear_frame2()
-	frame_deal = tk.Frame(master=frame2, width=200, height=100, bg=color_frame_menu)
+	clear_work_frame()
+	frame_deal = tk.Frame(master=work_frame, width=200, height=100, bg=color_frame_menu)
 	frame_deal.pack(side=tk.TOP, fill='both')
 
 	# frame_label_deal = Label(frame_deal, text='Создаем сделку')
@@ -1086,24 +1085,24 @@ def create_warehous():
 	labelframe = LabelFrame(frame_deal, text="Новый товар")
 	labelframe.pack(fill="both", expand="yes")
  
-	labelframe2 = LabelFrame(labelframe, text="О товаре")
-	labelframe2.pack(fill="both", expand="yes") 
+	labelwork_frame = LabelFrame(labelframe, text="О товаре")
+	labelwork_frame.pack(fill="both", expand="yes") 
 
-	frame = tk.Frame(labelframe2)
+	frame = tk.Frame(labelwork_frame)
 	frame.pack(anchor='w')
 	left = Label(frame, text="Наименование")
 	left.pack(side='left')
 	entry_name = Entry(frame, width=50)
 	entry_name.pack(side='right', pady=6, padx=6)
 
-	frame = tk.Frame(labelframe2)
+	frame = tk.Frame(labelwork_frame)
 	frame.pack(anchor='w')
 	left = Label(frame, text="Описание")
 	left.pack(side='left')
 	entry_description = Entry(frame, width=50)
 	entry_description.pack(side='right', pady=6, padx=6)
 
-	frame = tk.Frame(labelframe2)
+	frame = tk.Frame(labelwork_frame)
 	frame.pack(anchor='w')
 	left = Label(frame, text="Ед.измерения")
 	left.pack(side='left')
@@ -1114,28 +1113,28 @@ def create_warehous():
 	# entry_3 = Entry(frame, width=50)
 	# entry_3.pack(side='right', pady=6, padx=6)
 
-	frame = tk.Frame(labelframe2)
+	frame = tk.Frame(labelwork_frame)
 	frame.pack(anchor='w')
 	left = Label(frame, text="Цена в закупке")
 	left.pack(side='left')
 	entry_purchase_price = Entry(frame, width=50)
 	entry_purchase_price.pack(side='right', pady=6, padx=6)
 
-	frame = tk.Frame(labelframe2)
+	frame = tk.Frame(labelwork_frame)
 	frame.pack(anchor='w')
 	left = Label(frame, text="Розничная цена")
 	left.pack(side='left')
 	entry_retail_price = Entry(frame, width=50)
 	entry_retail_price.pack(side='right', pady=6, padx=6)
 
-	frame = tk.Frame(labelframe2)
+	frame = tk.Frame(labelwork_frame)
 	frame.pack(anchor='w')
 	left = Label(frame, text="Количество")
 	left.pack(side='left')
 	entry_quantity = Entry(frame, width=50)
 	entry_quantity.pack(side='right', pady=6, padx=6)
 
-	frame = tk.Frame(labelframe2)
+	frame = tk.Frame(labelwork_frame)
 	frame.pack(anchor='w')
 	left = Label(frame, text="Зарезервировано")
 	left.pack(side='left')
@@ -1169,8 +1168,8 @@ def create_warehous():
 	Button_deal2.pack(side=tk.RIGHT)	
 
 def warehouse():
-	clear_frame2()
-	frame_deal = tk.Frame(master=frame2, width=200, height=100, bg=color_frame_menu)
+	clear_work_frame()
+	frame_deal = tk.Frame(master=work_frame, width=200, height=100, bg=color_frame_menu)
 	frame_deal.pack(side=tk.TOP, fill='both')
 	Button_deal = tk.Button(master=frame_deal, text='Добавить товар', command=create_warehous)
 	Button_deal.pack(side=tk.LEFT)
@@ -1179,7 +1178,7 @@ def warehouse():
 	cur = conn.cursor()
 	cur.execute("SELECT id, name, retail_price, quantity, reserved FROM warehouse")
 	rows = cur.fetchall()
-	tree2= ttk.Treeview(frame2, column=("column1", "column2", "column3", "column4", "column5"), show='headings')
+	tree2= ttk.Treeview(work_frame, column=("column1", "column2", "column3", "column4", "column5"), show='headings')
 	tree2.heading("#1", text="id")
 	tree2.column("#1", minwidth=30, width=40)
 	tree2.heading("#2", text="Наименование")
@@ -1199,8 +1198,8 @@ def warehouse():
 ###-------------------------------------------------------------------------------------------------------------------------------------------------####
 
 def inventory_control(): # Окно Складского учета
-	clear_frame2()
-	frame_deal = tk.Frame(master=frame2, width=200, height=100, bg=color_frame_menu)
+	clear_work_frame()
+	frame_deal = tk.Frame(master=work_frame, width=200, height=100, bg=color_frame_menu)
 	frame_deal.pack(side=tk.TOP, fill='both')
 	Button_deal = tk.Button(master=frame_deal, text='Создать оприходование')
 	Button_deal['state']='disabled'
@@ -1209,7 +1208,7 @@ def inventory_control(): # Окно Складского учета
 	Button_deal2['state']='disabled'
 	Button_deal2.pack(side=tk.LEFT)
 
-	tree2= ttk.Treeview(frame2, column=("column1", "column2", "column3", "column4",
+	tree2= ttk.Treeview(work_frame, column=("column1", "column2", "column3", "column4",
 										"column5", "column6", "column7", "column8"), show='headings')
 	tree2.heading("#1", text="Название")
 	tree2.heading("#2", text="Номер документа основания")
@@ -1231,8 +1230,8 @@ def new_services(arg,arg2,arg3,arg4):
 	Service.create(name=arg, description=arg2, retail_price=arg3, quantity=arg4)
 
 def create_services():
-	clear_frame2()
-	frame_deal = tk.Frame(master=frame2, width=200, height=100, bg=color_frame_menu)
+	clear_work_frame()
+	frame_deal = tk.Frame(master=work_frame, width=200, height=100, bg=color_frame_menu)
 	frame_deal.pack(side=tk.TOP, fill='both')
 
 	# frame_label_deal = Label(frame_deal, text='Создаем сделку')
@@ -1241,31 +1240,31 @@ def create_services():
 	labelframe = LabelFrame(frame_deal, text="Новая услуга")
 	labelframe.pack(fill="both", expand="yes")
  
-	labelframe2 = LabelFrame(labelframe, text="Об услуге")
-	labelframe2.pack(fill="both", expand="yes") 
+	labelwork_frame = LabelFrame(labelframe, text="Об услуге")
+	labelwork_frame.pack(fill="both", expand="yes") 
 
-	frame = tk.Frame(labelframe2)
+	frame = tk.Frame(labelwork_frame)
 	frame.pack(anchor='w')
 	left = Label(frame, text="Наименование")
 	left.pack(side='left')
 	entry_name = Entry(frame, width=50)
 	entry_name.pack(side='right', pady=6, padx=6)
 
-	frame = tk.Frame(labelframe2)
+	frame = tk.Frame(labelwork_frame)
 	frame.pack(anchor='w')
 	left = Label(frame, text="Описание")
 	left.pack(side='left')
 	entry_description = Entry(frame, width=50)
 	entry_description.pack(side='right', pady=6, padx=6)
 
-	frame = tk.Frame(labelframe2)
+	frame = tk.Frame(labelwork_frame)
 	frame.pack(anchor='w')
 	left = Label(frame, text="Розничная цена")
 	left.pack(side='left')
 	entry_retail_price = Entry(frame, width=50)
 	entry_retail_price.pack(side='right', pady=6, padx=6)
 
-	frame = tk.Frame(labelframe2)
+	frame = tk.Frame(labelwork_frame)
 	frame.pack(anchor='w')
 	left = Label(frame, text="Количество")
 	left.pack(side='left')
@@ -1294,8 +1293,8 @@ def create_services():
 
 
 def services():
-	clear_frame2()
-	frame_deal = tk.Frame(master=frame2, width=200, height=100, bg=color_frame_menu)
+	clear_work_frame()
+	frame_deal = tk.Frame(master=work_frame, width=200, height=100, bg=color_frame_menu)
 	frame_deal.pack(side=tk.TOP, fill='both')
 	Button_deal = tk.Button(master=frame_deal, text='Добавить Услугу', command=create_services)
 	Button_deal.pack(side=tk.LEFT)
@@ -1304,7 +1303,7 @@ def services():
 	cur = conn.cursor()
 	cur.execute("SELECT id, name, retail_price, quantity FROM service")
 	rows = cur.fetchall()
-	tree2= ttk.Treeview(frame2, column=("column1", "column2", "column3", "column4"), show='headings')
+	tree2= ttk.Treeview(work_frame, column=("column1", "column2", "column3", "column4"), show='headings')
 	tree2.heading("#1", text="id")
 	tree2.column("#1", minwidth=30, width=40)
 	tree2.heading("#2", text="Наименование")
@@ -1325,8 +1324,8 @@ def new_new_applications(arg,arg2,arg3,arg4,arg5,arg6):
 
 
 def create_new_applications():
-	clear_frame2()
-	frame_deal = tk.Frame(master=frame2, width=200, height=100, bg=color_frame_menu)
+	clear_work_frame()
+	frame_deal = tk.Frame(master=work_frame, width=200, height=100, bg=color_frame_menu)
 	frame_deal.pack(side=tk.TOP, fill='both')
 
 	# frame_label_deal = Label(frame_deal, text='Создаем сделку')
@@ -1335,24 +1334,24 @@ def create_new_applications():
 	labelframe = LabelFrame(frame_deal, text="Новая заявка")
 	labelframe.pack(fill="both", expand="yes")
  
-	labelframe2 = LabelFrame(labelframe, text="О заявке")
-	labelframe2.pack(fill="both", expand="yes") 
+	labelwork_frame = LabelFrame(labelframe, text="О заявке")
+	labelwork_frame.pack(fill="both", expand="yes") 
 
-	frame = tk.Frame(labelframe2)
+	frame = tk.Frame(labelwork_frame)
 	frame.pack(anchor='w')
 	left = Label(frame, text="Имя")
 	left.pack(side='left')
 	entry_name = Entry(frame, width=50)
 	entry_name.pack(side='right', pady=6, padx=6)
 
-	frame = tk.Frame(labelframe2)
+	frame = tk.Frame(labelwork_frame)
 	frame.pack(anchor='w')
 	left = Label(frame, text="Телефон")
 	left.pack(side='left')
 	entry_telphone = Entry(frame, width=50)
 	entry_telphone.pack(side='right', pady=6, padx=6)
 
-	frame = tk.Frame(labelframe2)
+	frame = tk.Frame(labelwork_frame)
 	frame.pack(anchor='w')
 	left = Label(frame, text="Источник")
 	left.pack(side='left')
@@ -1361,7 +1360,7 @@ def create_new_applications():
 	combobox_2.current(0)
 	combobox_2.pack(side='right', pady=6, padx=6)
 
-	frame = tk.Frame(labelframe2)
+	frame = tk.Frame(labelwork_frame)
 	frame.pack(anchor='w')
 	left = Label(frame, text="Комментарии")
 	left.pack(side='left')
@@ -1385,7 +1384,7 @@ def create_new_applications():
 		entry_telphone.delete("0", END)
 		combobox_2.delete("0", END)	
 		entry_comment.delete("0", END)
-		clear_frame2()
+		clear_work_frame()
 		new_applications()	
 	Button_deal = tk.Button(master=frame, text='Сохранить', command=call_new_applications)
 	Button_deal.pack(side=tk.LEFT)
@@ -1395,8 +1394,8 @@ def create_new_applications():
 	
 
 def new_applications():
-	clear_frame2()
-	new_applications = tk.Frame(master=frame2, width=200, height=100, bg=color_frame_menu)
+	clear_work_frame()
+	new_applications = tk.Frame(master=work_frame, width=200, height=100, bg=color_frame_menu)
 	new_applications.pack(side=tk.TOP, fill='both')
 	Button_deal = tk.Button(master=new_applications, text='Добавить заявку', command=create_new_applications)
 	Button_deal.pack(side=tk.LEFT)
@@ -1405,7 +1404,7 @@ def new_applications():
 	cur = conn.cursor()
 	cur.execute("SELECT id, name, telephone_number, create_date, Source, responsible, comment FROM lid WHERE status='Новая'")
 	rows = cur.fetchall()
-	tree2= ttk.Treeview(frame2, column=("column1", "column2", "column3", "column4", "column5", "column6", "column7"), show='headings')
+	tree2= ttk.Treeview(work_frame, column=("column1", "column2", "column3", "column4", "column5", "column6", "column7"), show='headings')
 	tree2.heading("#1", text="id")
 	tree2.column("#1", minwidth=30, width=40)
 	tree2.heading("#2", text="Имя")
@@ -1432,8 +1431,8 @@ def new_all_applications(arg,arg2,arg3,arg4,arg5,arg6):
 
 
 def create_all_applications():
-	clear_frame2()
-	frame_deal = tk.Frame(master=frame2, width=200, height=100, bg=color_frame_menu)
+	clear_work_frame()
+	frame_deal = tk.Frame(master=work_frame, width=200, height=100, bg=color_frame_menu)
 	frame_deal.pack(side=tk.TOP, fill='both')
 
 	# frame_label_deal = Label(frame_deal, text='Создаем сделку')
@@ -1442,24 +1441,24 @@ def create_all_applications():
 	labelframe = LabelFrame(frame_deal, text="Новая заявка")
 	labelframe.pack(fill="both", expand="yes")
  
-	labelframe2 = LabelFrame(labelframe, text="О заявке")
-	labelframe2.pack(fill="both", expand="yes") 
+	labelwork_frame = LabelFrame(labelframe, text="О заявке")
+	labelwork_frame.pack(fill="both", expand="yes") 
 
-	frame = tk.Frame(labelframe2)
+	frame = tk.Frame(labelwork_frame)
 	frame.pack(anchor='w')
 	left = Label(frame, text="Имя")
 	left.pack(side='left')
 	entry_name = Entry(frame, width=50)
 	entry_name.pack(side='right', pady=6, padx=6)
 
-	frame = tk.Frame(labelframe2)
+	frame = tk.Frame(labelwork_frame)
 	frame.pack(anchor='w')
 	left = Label(frame, text="Телефон")
 	left.pack(side='left')
 	entry_telphone = Entry(frame, width=50)
 	entry_telphone.pack(side='right', pady=6, padx=6)
 
-	frame = tk.Frame(labelframe2)
+	frame = tk.Frame(labelwork_frame)
 	frame.pack(anchor='w')
 	left = Label(frame, text="Источник")
 	left.pack(side='left')
@@ -1468,7 +1467,7 @@ def create_all_applications():
 	combobox_2.current(0)
 	combobox_2.pack(side='right', pady=6, padx=6)
 
-	frame = tk.Frame(labelframe2)
+	frame = tk.Frame(labelwork_frame)
 	frame.pack(anchor='w')
 	left = Label(frame, text="Комментарии")
 	left.pack(side='left')
@@ -1492,46 +1491,45 @@ def create_all_applications():
 		entry_telphone.delete("0", END)
 		combobox_2.delete("0", END)	
 		entry_comment.delete("0", END)
-		clear_frame2()
+		clear_work_frame()
 		all_applications()	
 	Button_deal = tk.Button(master=frame, text='Сохранить', command=call_all_applications)
 	Button_deal.pack(side=tk.LEFT)
 	Button_deal2 = tk.Button(master=frame, text='Отмена', command=all_applications)
 	Button_deal2.pack(side=tk.RIGHT)
 
-
 def all_applications():
-	clear_frame2()
-	new_applications = tk.Frame(master=frame2, width=200, height=100, bg=color_frame_menu)
-	new_applications.pack(side=tk.TOP, fill='both')
-	Button_deal = tk.Button(master=new_applications, text='Добавить заявку', command=create_new_applications)
-	Button_deal.pack(side=tk.LEFT)
+		clear_work_frame()
+		new_applications = tk.Frame(master=work_frame, width=200, height=100, bg=color_frame_menu)
+		new_applications.pack(side=tk.TOP, fill='both')
+		Button_deal = tk.Button(master=new_applications, text='Добавить заявку', command=create_new_applications)
+		Button_deal.pack(side=tk.LEFT)
 
-	conn = sqlite3.connect("organization.db")
-	cur = conn.cursor()
-	cur.execute("SELECT * FROM lid")
-	rows = cur.fetchall()
-	tree2= ttk.Treeview(frame2, column=("column1", "column2", "column3", "column4", "column5", "column6", "column7", "column8"), show='headings')
-	tree2.heading("#1", text="id")
-	tree2.column("#1", minwidth=30, width=40)
-	tree2.heading("#2", text="Имя")
-	tree2.column("#2", minwidth=100, width=150)
-	tree2.heading("#3", text="Телефон")
-	tree2.column("#3", minwidth=100, width=100)
-	tree2.heading("#4", text="Создан")
-	tree2.column("#4", minwidth=100, width=150)
-	tree2.heading("#5", text="Источник")
-	tree2.column("#5", minwidth=100, width=130)
-	tree2.heading("#6", text="Ответственный")
-	tree2.column("#6", minwidth=100, width=100)
-	tree2.heading("#7", text="Комментарии")
-	tree2.column("#7", minwidth=100, width=100)
-	tree2.heading("#8", text="Статус")
-	tree2.column("#8", minwidth=100, width=100)
-	tree2.pack(expand=1, anchor=E, fill="both")
-	for row in rows:
-		tree2.insert("", tk.END, values=row)
-	conn.close()
+		conn = sqlite3.connect("organization.db")
+		cur = conn.cursor()
+		cur.execute("SELECT * FROM lid")
+		rows = cur.fetchall()
+		tree2= ttk.Treeview(work_frame, column=("column1", "column2", "column3", "column4", "column5", "column6", "column7", "column8"), show='headings')
+		tree2.heading("#1", text="id")
+		tree2.column("#1", minwidth=30, width=40)
+		tree2.heading("#2", text="Имя")
+		tree2.column("#2", minwidth=100, width=150)
+		tree2.heading("#3", text="Телефон")
+		tree2.column("#3", minwidth=100, width=100)
+		tree2.heading("#4", text="Создан")
+		tree2.column("#4", minwidth=100, width=150)
+		tree2.heading("#5", text="Источник")
+		tree2.column("#5", minwidth=100, width=130)
+		tree2.heading("#6", text="Ответственный")
+		tree2.column("#6", minwidth=100, width=100)
+		tree2.heading("#7", text="Комментарии")
+		tree2.column("#7", minwidth=100, width=100)
+		tree2.heading("#8", text="Статус")
+		tree2.column("#8", minwidth=100, width=100)
+		tree2.pack(expand=1, anchor=E, fill="both")
+		for row in rows:
+			tree2.insert("", tk.END, values=row)
+		conn.close()
 
 ###-------------------------------------------------------------------------------------------------------------------------------------------------####
 
@@ -1656,8 +1654,8 @@ button_3_3.pack()
 
 # Наполнение страницы
 
-frame2 = tk.Frame(master=window, width=1180, height=50)
-frame2.pack(side=tk.LEFT, fill='both')
+work_frame = tk.Frame(master=window, width=1180, height=50)
+work_frame.pack(side=tk.LEFT, fill='both')
 
 
 ###-------------------------------------------------------------------------------------------------------------------------------------------------#### 
@@ -1718,6 +1716,3 @@ window.mainloop()
 # 	main_window = Tk()
 # 	run = ProgrammWindow(main_window)
 # 	main_window.mainloop()
-
-
- 
