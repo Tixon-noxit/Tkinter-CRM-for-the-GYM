@@ -40,6 +40,8 @@ from sys import stderr
 from traceback import print_exc
 import email
 
+from views import clear_widget
+
 """ Битрикс24 => Клиенты """
 """ Унифицировать функцию поиска по таблицам """
 
@@ -62,14 +64,6 @@ window.config(menu=menu)
 
 width = window.winfo_screenwidth()  # Ширина окна
 height = window.winfo_screenheight()  # Высота окна
-
-
-###-------------------------------------------------------------------------------------------------------------------------------------------------####
-
-def clear_work_frame():
-	# Очистка рабочего окна 
-	for widget in work_frame.winfo_children():
-		widget.destroy()
 
 ###-------------------------------------------------------------------------------------------------------------------------------------------------####
 
@@ -136,7 +130,7 @@ def new_contact(arg, arg2, arg3, arg4, arg5):
 	Contact.create(First_Name=arg, Last_Name=arg2, Phone_number=arg3 , Type=arg4 ,  Source=arg5)
 
 def create_contact():
-	clear_work_frame()
+	clear_widget(work_frame)
 	frame_contact = tk.Frame(master=work_frame, width=200, height=100, bg=color_frame_menu)
 	frame_contact.pack(side=tk.TOP, fill='both')
 
@@ -210,7 +204,7 @@ def create_contact():
 		combobox_2.delete("0", END)
 
 	def close_create_contact():
-		clear_work_frame()
+		clear_widget(work_frame)
 		clients()	
 
 	Button_deal = tk.Button(master=frame, text='Сохранить', command=call_new_contact)
@@ -220,7 +214,7 @@ def create_contact():
 
 
 def contacts():
-	clear_work_frame()
+	clear_widget(work_frame)
 	frame_clients = tk.Frame(master=work_frame, width=200, height=100, bg=color_frame_menu)
 	frame_clients.pack(side=tk.TOP, fill='both')	
 	Button_clients = tk.Button(master=frame_clients, text='Добавить', command=create_contact)
@@ -253,7 +247,7 @@ def contacts():
 
 
 def provider(): # Окно поставщиков
-	clear_work_frame()
+	clear_widget(work_frame)
 	frame_clients = tk.Frame(master=work_frame, width=200, height=100, bg=color_frame_menu)
 	frame_clients.pack(side=tk.TOP, fill='both')	
 	Button_clients = tk.Button(master=frame_clients, text='Добавить', command=create_contact)
@@ -285,7 +279,7 @@ def provider(): # Окно поставщиков
 
 
 def clients():
-	clear_work_frame()
+	clear_widget(work_frame)
 	frame_clients = tk.Frame(master=work_frame, width=200, height=100, bg=color_frame_menu)
 	frame_clients.pack(side=tk.TOP, fill='both')	
 	Button_clients = tk.Button(master=frame_clients, text='Контакты', command=contacts)
@@ -313,7 +307,7 @@ def clients():
 
 ###-------------------------------------------------------------------------------------------------------------------------------------------------####
 def contact_selection():
-	clear_work_frame()
+	clear_widget(work_frame)
 	a = tk.Toplevel()
 	a.geometry("750x700+400+50")
 	a.resizable(0, 0)
@@ -395,7 +389,7 @@ def new_deal(arg, arg2, arg3, arg4, arg5, arg6,	arg7, arg8, arg9):
 				comment=arg9)
 
 def create_deal():
-	clear_work_frame()
+	clear_widget(work_frame)
 	frame_deal = tk.Frame(master=work_frame, width=200, height=100, bg=color_frame_menu)
 	frame_deal.pack(side=tk.TOP, fill='both')
 
@@ -552,7 +546,7 @@ def create_deal():
 		cancellation_deal()
 
 	def cancellation_deal():
-		clear_work_frame()
+		clear_widget(work_frame)
 		history_deal()	
 
 	frame.bind('<Return>', Button_deal)	
@@ -565,7 +559,7 @@ def create_deal():
 	# При нажатии на Enter Сохранять сделку
 
 def history_deal():
-	clear_work_frame()
+	clear_widget(work_frame)
 	
 	frame_deal = tk.Frame(master=work_frame, width=200, height=100, bg=color_frame_menu)
 	frame_deal.pack(side=tk.TOP, fill='both')
@@ -664,7 +658,7 @@ def history_deal():
 
 
 def deal_now():
-	clear_work_frame()
+	clear_widget(work_frame)
 	
 	frame_deal = tk.Frame(master=work_frame, width=200, height=100, bg=color_frame_menu)
 	frame_deal.pack(side=tk.TOP, fill='both')
@@ -848,7 +842,7 @@ def new_trener(arg, arg2, arg3, arg4, arg5):
 	Trener.create(First_Name=arg, Last_Name=arg2, Phone_number=arg3 , Type=arg4 ,  Source=arg5)    
 
 def create_trener():
-	clear_work_frame()
+	clear_widget(work_frame)
 	frame_deal = tk.Frame(master=work_frame, width=200, height=100, bg=color_frame_menu)
 	frame_deal.pack(side=tk.TOP, fill='both')
 
@@ -921,13 +915,13 @@ def create_trener():
 		combobox_2.delete("0", END)	
 	Button_deal = tk.Button(master=frame, text='Сохранить', command=call_new_trener)
 	Button_deal.pack(side=tk.LEFT)
-	Button_deal2 = tk.Button(master=frame, text='Отмена', command=clear_work_frame)
+	Button_deal2 = tk.Button(master=frame, text='Отмена', command=lambda: clear_widget(work_frame))
 	Button_deal2.pack(side=tk.RIGHT)
 
 
 
 def treners():
-	clear_work_frame()
+	clear_widget(work_frame)
 	frame_clients = tk.Frame(master=work_frame, width=200, height=100, bg=color_frame_menu)
 	frame_clients.pack(side=tk.TOP, fill='both')	
 	Button_clients = tk.Button(master=frame_clients, text='Добавить', command=create_trener)
@@ -962,7 +956,7 @@ def new_staff(arg,arg2,arg3,arg4,arg5):
 
 
 def create_staff():
-	clear_work_frame()
+	clear_widget(work_frame)
 	frame_deal = tk.Frame(master=work_frame, width=200, height=100, bg=color_frame_menu)
 	frame_deal.pack(side=tk.TOP, fill='both')
 
@@ -1035,13 +1029,13 @@ def create_staff():
 		combobox_2.delete("0", END)	
 	Button_deal = tk.Button(master=frame, text='Сохранить', command=call_new_staff)
 	Button_deal.pack(side=tk.LEFT)
-	Button_deal2 = tk.Button(master=frame, text='Отмена', command=clear_work_frame)
+	Button_deal2 = tk.Button(master=frame, text='Отмена', command=lambda: clear_widget(work_frame))
 	Button_deal2.pack(side=tk.RIGHT)
 
 
 
 def staff():
-	clear_work_frame()
+	clear_widget(work_frame)
 	frame_clients = tk.Frame(master=work_frame, width=200, height=100, bg=color_frame_menu)
 	frame_clients.pack(side=tk.TOP, fill='both')	
 	Button_clients = tk.Button(master=frame_clients, text='Добавить', command=create_staff)
@@ -1075,7 +1069,7 @@ def new_warehouse(arg,arg2,arg3,arg4,arg5,arg6,arg7):
 	Warehouse.create(name=arg, description=arg2, unit=arg3 , purchase_price=arg4 ,  retail_price=arg5, quantity=arg6, reserved=arg7)
 
 def create_warehous():
-	clear_work_frame()
+	clear_widget(work_frame)
 	frame_deal = tk.Frame(master=work_frame, width=200, height=100, bg=color_frame_menu)
 	frame_deal.pack(side=tk.TOP, fill='both')
 
@@ -1168,7 +1162,7 @@ def create_warehous():
 	Button_deal2.pack(side=tk.RIGHT)	
 
 def warehouse():
-	clear_work_frame()
+	clear_widget(work_frame)
 	frame_deal = tk.Frame(master=work_frame, width=200, height=100, bg=color_frame_menu)
 	frame_deal.pack(side=tk.TOP, fill='both')
 	Button_deal = tk.Button(master=frame_deal, text='Добавить товар', command=create_warehous)
@@ -1198,7 +1192,7 @@ def warehouse():
 ###-------------------------------------------------------------------------------------------------------------------------------------------------####
 
 def inventory_control(): # Окно Складского учета
-	clear_work_frame()
+	clear_widget(work_frame)
 	frame_deal = tk.Frame(master=work_frame, width=200, height=100, bg=color_frame_menu)
 	frame_deal.pack(side=tk.TOP, fill='both')
 	Button_deal = tk.Button(master=frame_deal, text='Создать оприходование')
@@ -1230,7 +1224,7 @@ def new_services(arg,arg2,arg3,arg4):
 	Service.create(name=arg, description=arg2, retail_price=arg3, quantity=arg4)
 
 def create_services():
-	clear_work_frame()
+	clear_widget(work_frame)
 	frame_deal = tk.Frame(master=work_frame, width=200, height=100, bg=color_frame_menu)
 	frame_deal.pack(side=tk.TOP, fill='both')
 
@@ -1293,7 +1287,7 @@ def create_services():
 
 
 def services():
-	clear_work_frame()
+	clear_widget(work_frame)
 	frame_deal = tk.Frame(master=work_frame, width=200, height=100, bg=color_frame_menu)
 	frame_deal.pack(side=tk.TOP, fill='both')
 	Button_deal = tk.Button(master=frame_deal, text='Добавить Услугу', command=create_services)
@@ -1324,7 +1318,7 @@ def new_new_applications(arg,arg2,arg3,arg4,arg5,arg6):
 
 
 def create_new_applications():
-	clear_work_frame()
+	clear_widget(work_frame)
 	frame_deal = tk.Frame(master=work_frame, width=200, height=100, bg=color_frame_menu)
 	frame_deal.pack(side=tk.TOP, fill='both')
 
@@ -1384,7 +1378,7 @@ def create_new_applications():
 		entry_telphone.delete("0", END)
 		combobox_2.delete("0", END)	
 		entry_comment.delete("0", END)
-		clear_work_frame()
+		clear_widget(work_frame)
 		new_applications()	
 	Button_deal = tk.Button(master=frame, text='Сохранить', command=call_new_applications)
 	Button_deal.pack(side=tk.LEFT)
@@ -1394,7 +1388,7 @@ def create_new_applications():
 	
 
 def new_applications():
-	clear_work_frame()
+	clear_widget(work_frame)
 	new_applications = tk.Frame(master=work_frame, width=200, height=100, bg=color_frame_menu)
 	new_applications.pack(side=tk.TOP, fill='both')
 	Button_deal = tk.Button(master=new_applications, text='Добавить заявку', command=create_new_applications)
@@ -1431,7 +1425,7 @@ def new_all_applications(arg,arg2,arg3,arg4,arg5,arg6):
 
 
 def create_all_applications():
-	clear_work_frame()
+	clear_widget(work_frame)
 	frame_deal = tk.Frame(master=work_frame, width=200, height=100, bg=color_frame_menu)
 	frame_deal.pack(side=tk.TOP, fill='both')
 
@@ -1491,7 +1485,7 @@ def create_all_applications():
 		entry_telphone.delete("0", END)
 		combobox_2.delete("0", END)	
 		entry_comment.delete("0", END)
-		clear_work_frame()
+		clear_widget(work_frame)
 		all_applications()	
 	Button_deal = tk.Button(master=frame, text='Сохранить', command=call_all_applications)
 	Button_deal.pack(side=tk.LEFT)
@@ -1499,7 +1493,7 @@ def create_all_applications():
 	Button_deal2.pack(side=tk.RIGHT)
 
 def all_applications():
-		clear_work_frame()
+		clear_widget(work_frame)
 		new_applications = tk.Frame(master=work_frame, width=200, height=100, bg=color_frame_menu)
 		new_applications.pack(side=tk.TOP, fill='both')
 		Button_deal = tk.Button(master=new_applications, text='Добавить заявку', command=create_new_applications)
