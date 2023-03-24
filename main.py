@@ -22,13 +22,13 @@ Lid.create_table()
 #
 
 # Часы
-import threading  # Импортируем модель для дополнительных процессов
-import tkinter as tk
-from time import sleep
+# import threading  # Импортируем модель для дополнительных процессов
+# import tkinter as tk
+# from time import sleep
 from datetime import timedelta, datetime
 
-# Таймер
-import time
+# # Таймер
+# import time
 
 # Парсер заявок
 from mail.postal_data import MAIL, PASSWORD, PASSWORD_MAIL_APP  # Отредактировать данные в файле
@@ -40,7 +40,7 @@ from sys import stderr
 from traceback import print_exc
 import email
 
-from views import clear_widget  # search_for_table
+from views import clear_widget, new_contact, close_window, new_deal, new_trener, new_staff, new_warehouse, new_services, new_new_applications, clock # search_for_table
 
 """ Битрикс24 => Клиенты """
 """ Унифицировать функцию поиска по таблицам """
@@ -126,10 +126,6 @@ def search_for_table(parent, var, treeview, db_name, table_name, search_value, c
 
 ###-------------------------------------------------------------------------------------------------------------------------------------------------####    
 
-def new_contact(arg, arg2, arg3, arg4, arg5):
-	# Создать новый контакт в базе данных
-	Contact.create(First_Name=arg, Last_Name=arg2, Phone_number=arg3 , Type=arg4 ,  Source=arg5)
-
 def create_contact():
 	clear_widget(work_frame)
 	frame_contact = tk.Frame(master=work_frame, width=200, height=100, bg=color_frame_menu)
@@ -141,7 +137,7 @@ def create_contact():
 	labelwork_frame = LabelFrame(labelframe, text="О контакте")
 	labelwork_frame.pack(fill="both", expand="yes") 
 
-	frame = tk.Frame(labelwork_work_frame)
+	frame = tk.Frame(labelwork_frame)
 	frame.pack(anchor='w')
 	left = Label(frame, text="Фамилия")
 	left.pack(side='left')
@@ -188,26 +184,9 @@ def create_contact():
 	frame = tk.Frame(labelframe5)
 	frame.pack(side='top')
 
-	def call_new_contact():
-		arg = entry_1.get()
-		arg2 = entry_2.get()
-		arg3 = entry_3.get()
-		arg4 = combobox_1.get()
-		arg5 = combobox_2.get()
-		new_contact(arg,arg2,arg3,arg4,arg5)
-		entry_1.delete("0", END) 
-		entry_2.delete("0", END)
-		entry_3.delete("0", END)
-		combobox_1.delete("0", END)
-		combobox_2.delete("0", END)
-
-	def close_create_contact():
-		clear_widget(work_frame)
-		clients()	
-
-	Button_deal = tk.Button(master=frame, text='Сохранить', command=call_new_contact)
+	Button_deal = tk.Button(master=frame, text='Сохранить', command=lambda: new_contact(entry_1.get(),entry_2.get(),entry_3.get(),combobox_1.get(),combobox_2.get(),frame_contact, contacts))
 	Button_deal.pack(side=tk.LEFT)
-	Button_deal2 = tk.Button(master=frame, text='Отмена', command=close_create_contact)
+	Button_deal2 = tk.Button(master=frame, text='Отмена', command=lambda: close_window(frame_contact, contacts))
 	Button_deal2.pack(side=tk.RIGHT)
 
 
@@ -219,13 +198,7 @@ def contacts():
 	Button_clients.pack(side=tk.LEFT)
 	Button_clients2 = tk.Button(master=frame_clients, text='Назад', command=clients)
 	Button_clients2.pack(side=tk.LEFT)
-	# Button_clients2 = tk.Button(master=frame_clients, text='Поставщики')
-	# Button_clients2.pack(side=tk.LEFT)
 
-	conn = sqlite3.connect("organization.db")
-	cur = conn.cursor()
-	cur.execute("SELECT * FROM contact ORDER BY create_date DESC")
-	rows = cur.fetchall()
 	tree2= ttk.Treeview(work_frame, column=("column1", "column2", "column3", "column4", "column5", "column6", "column6"), show='headings')
 	tree2.heading("#1", text="id")
 	tree2.column("#1", minwidth=40, width=40)
@@ -239,9 +212,12 @@ def contacts():
 	tree2.column("#6", minwidth=120, width=150)
 	tree2.heading("#7", text="Дата создания")
 	tree2.pack(expand=1, anchor=NW, fill="both")
-	for row in rows:
-		tree2.insert("", tk.END, values=row)
-	conn.close()
+
+	data = Contact.select().order_by(Contact.create_date)
+
+	for row in data:
+		tree2.insert("", tk.END, values=[row.id, row.First_Name, row.Last_Name, row.Phone_number, row.Type, row.Source, row.create_date])
+	
 
 
 def provider(): # Окно поставщиков
@@ -253,10 +229,6 @@ def provider(): # Окно поставщиков
 	Button_clients2 = tk.Button(master=frame_clients, text='Назад', command=clients)
 	Button_clients2.pack(side=tk.LEFT)
 
-	conn = sqlite3.connect("organization.db")
-	cur = conn.cursor()
-	cur.execute("SELECT * FROM contact WHERE Type='Поставщик'")
-	rows = cur.fetchall()
 	tree2= ttk.Treeview(work_frame, column=("column1", "column2", "column3", "column4", "column5", "column6", "column6"), show='headings')
 	tree2.heading("#1", text="id")
 	tree2.column("#1", minwidth=40, width=40)
@@ -270,10 +242,11 @@ def provider(): # Окно поставщиков
 	tree2.column("#6", minwidth=120, width=150)
 	tree2.heading("#7", text="Дата создания")
 	tree2.pack(expand=1, anchor=NW, fill="both")
-	for row in rows:
-		# print(row) # it print all records in the database
-		tree2.insert("", tk.END, values=row)
-	conn.close()	
+
+	data = Contact.select().where(Contact.Type == 'Поставщик')
+
+	for row in data:
+		tree2.insert("", tk.END, values=[row.id, row.First_Name, row.Last_Name, row.Phone_number, row.Type, row.Source, row.create_date])	
 
 
 def clients():
@@ -285,11 +258,6 @@ def clients():
 	Button_clients2 = tk.Button(master=frame_clients, text='Поставщики', command=provider)
 	Button_clients2.pack(side=tk.LEFT)
 	
-
-	conn = sqlite3.connect("organization.db")
-	cur = conn.cursor()
-	cur.execute("SELECT * FROM contact WHERE Type='Клиент' ORDER BY create_date DESC")
-	rows = cur.fetchall()
 	tree2= ttk.Treeview(work_frame, column=("column1", "column2", "column3", "column4"), show='headings')
 	tree2.heading("#1", text="id")
 	tree2.column("#1", minwidth=20, width=30)
@@ -298,12 +266,15 @@ def clients():
 	tree2.heading("#4", text="Телефон")
 	tree2.column("#4", minwidth=50, width=120)
 	tree2.pack(expand=1, anchor=NW, fill="both")
-	for row in rows:
-		tree2.insert("", tk.END, values=row)
-	conn.close()
+
+	data = Contact.select().where(Contact.Type=='Клиент').order_by(Contact.create_date.desc())
+
+	for row in data:
+		tree2.insert("", tk.END, values=[row.id, row.First_Name, row.Last_Name, row.Phone_number, row.Type, row.Source, row.create_date])
 	search_for_table(frame_clients, 2, tree2, 'organization.db', 'Contact', 'First_Name', 'Type', 'Клиент',  clients)
 
 ###-------------------------------------------------------------------------------------------------------------------------------------------------####
+
 def contact_selection():
 	clear_widget(work_frame)
 	a = tk.Toplevel()
@@ -378,13 +349,6 @@ def contact_selection():
 
 	show()
 
-def new_deal(arg, arg2, arg3, arg4, arg5, arg6,	arg7, arg8, arg9):
-	name = arg4.split()
-	first_name = name[0]
-	last_name = name[1]
-	Deal.create(summ=arg, stady=arg2, create_date=arg3, client_first_name=first_name, client_last_name=last_name,
-				tip=arg5, source=arg6, date_the_start=arg7, responsible=arg8,
-				comment=arg9)
 
 def create_deal():
 	clear_widget(work_frame)
@@ -403,8 +367,6 @@ def create_deal():
 	left.pack(side='left')
 	summ_entr = ttk.Entry(frame, width=50)
 	summ_entr.pack(side='right', pady=6, padx=6)
-	#left = Label(frame, text="6500")
-	#left.pack(side='right')
 
 	frame = tk.Frame(labelwork_frame)
 	frame.pack()
@@ -463,8 +425,6 @@ def create_deal():
 	combobox_cont.pack(side=tk.RIGHT)
 
 
-
-
 	Button_deal = tk.Button(master=labelwork_frame, text='Создать Контакт', command=create_contact)
 	Button_deal.pack(side=tk.LEFT)
 
@@ -479,7 +439,6 @@ def create_deal():
 	combobox_tip = ttk.Combobox(frame, values=languages, width=48)
 	combobox_tip.current(4)
 	combobox_tip.pack(side='right', pady=6, padx=6)
-
 
 	frame = tk.Frame(labelframe3)
 	frame.pack(side='top')
@@ -505,7 +464,6 @@ def create_deal():
 	comment_entry = tk.Entry(frame, width=60)
 	comment_entry.pack(padx=8, pady= 8)
 
-
 	labelframe4 = LabelFrame(labelframe, text="Товары")
 	labelframe4.pack(fill="both", expand="yes")
 	Button_deal = tk.Button(master=labelframe4, text='Добавить +')
@@ -520,40 +478,13 @@ def create_deal():
 	labelframe5.pack(fill="both", expand="yes")
 	frame = tk.Frame(labelframe5)
 	frame.pack(side='top')
-
-	def add_deal():
-		summ = summ_entr.get()
-		stady = combobox_st.get()
-		date = cal_date.get()
-		contact = combobox_cont.get()
-		tip = combobox_tip.get()
-		source = combobox_source.get()
-		start = cal_start.get()
-		responsible = ADMIN #combobox_responsible.get()
-		comment = comment_entry.get()
-		new_deal(summ, stady, date, contact, tip, source, start, responsible, comment)
-		summ_entr.delete("0", END) 
-		combobox_st.delete("0", END) 
-		cal_date.delete("0", END) 
-		combobox_cont.delete("0", END) 
-		combobox_tip.delete("0", END) 
-		cal_start.delete("0", END) 
-		comment_entry.delete("0", END) 
-		# combobox_responsible.delete("0", END)
-		frame_deal.destroy()
-		cancellation_deal()
-
-	def cancellation_deal():
-		clear_widget(work_frame)
-		history_deal()	
-
+	
 	frame.bind('<Return>', Button_deal)	
-	Button_deal = tk.Button(master=frame, text='Сохранить', command=add_deal)
+	Button_deal = tk.Button(master=frame, text='Сохранить', command=lambda: new_deal(summ_entr.get(), combobox_st.get(), cal_date.get(), combobox_cont.get(), combobox_tip.get(), combobox_source.get(), cal_start.get(), ADMIN, comment_entry.get(), frame_deal, history_deal))
 	Button_deal.pack(side=tk.LEFT)
-	Button_deal2 = tk.Button(master=frame, text='Отмена', command=cancellation_deal)
+	Button_deal2 = tk.Button(master=frame, text='Отмена', command=lambda: close_window(frame_deal, history_deal))
 	Button_deal2.pack(side=tk.RIGHT)
 
-	
 	# При нажатии на Enter Сохранять сделку
 
 def history_deal():
@@ -566,7 +497,6 @@ def history_deal():
 	Button_deal2 = tk.Button(master=frame_deal, text='Назад', command=deal_now)
 	Button_deal2.pack(side=tk.LEFT)
 	
-
 	tree = ttk.Treeview(work_frame, column=("column1", "column2", "column3", "column4", "column5", "column6", "column7", "column8", "column9", "column10", "column11"), show ='headings')
 	tree.heading("#1", text="id")
 	tree.column("#1", minwidth=0, width=20)
@@ -591,7 +521,7 @@ def history_deal():
 	tree.heading("#11", text="Комментарии")
 	tree.column("#11", minwidth=0, width=170)
 	tree.pack(expand=1, anchor=N, fill="both")
-	table_deal = Deal.select()
+	table_deal = Deal.select().order_by(Deal.create_date)
 	for t in table_deal:
 		tree.insert("", tk.END, values=(t.id, t.summ, t.stady, t.create_date, 
 										t.client_first_name, t.client_last_name, 
@@ -663,12 +593,8 @@ def deal_now():
 	Button_deal = tk.Button(master=frame_deal, text='Создать сделку', command=create_deal)
 	Button_deal.pack(side=tk.LEFT)
 	Button_deal2 = tk.Button(master=frame_deal, text='История продаж', command=history_deal)
-	# Button_deal2['state'] = 'disabled'
 	Button_deal2.pack(side=tk.LEFT)
-	# Button_deal2 = tk.Button(master=frame_deal, text='Дела')
-	# Button_deal2.pack(side=tk.LEFT)
 
-	
 	tree = ttk.Treeview(work_frame, column=("column1", "column2", "column3", "column4", "column5", "column6", "column7", "column8", "column9", "column10", "column11"), show ='headings')
 	tree.heading("#1", text="id")
 	tree.column("#1", minwidth=0, width=20)
@@ -834,20 +760,13 @@ def deal_now():
 
 	tree.bind("<ButtonPress-3>", item_selected)
 ###-------------------------------------------------------------------------------------------------------------------------------------------------####
-
-def new_trener(arg, arg2, arg3, arg4, arg5):
-	# Внести нового тренера в базу данных
-	Trener.create(First_Name=arg, Last_Name=arg2, Phone_number=arg3 , Type=arg4 ,  Source=arg5)    
-
+ 
 def create_trener():
 	clear_widget(work_frame)
-	frame_deal = tk.Frame(master=work_frame, width=200, height=100, bg=color_frame_menu)
-	frame_deal.pack(side=tk.TOP, fill='both')
+	frame_treners = tk.Frame(master=work_frame, width=200, height=100, bg=color_frame_menu)
+	frame_treners.pack(side=tk.TOP, fill='both')
 
-	# frame_label_deal = Label(frame_deal, text='Создаем сделку')
-	# frame_label_deal.pack()
-
-	labelframe = LabelFrame(frame_deal, text="Новый Тренер")
+	labelframe = LabelFrame(frame_treners, text="Новый Тренер")
 	labelframe.pack(fill="both", expand="yes")
  
 	labelwork_frame = LabelFrame(labelframe, text="О Тренере")
@@ -899,23 +818,11 @@ def create_trener():
 	labelframe5.pack(fill="both", expand="yes")
 	frame = tk.Frame(labelframe5)
 	frame.pack(side='top')
-	def call_new_trener():
-		arg = entry_1.get()
-		arg2 = entry_2.get()
-		arg3 = entry_3.get()
-		arg4 = combobox_trn.get()
-		arg5 = combobox_2.get()
-		new_trener(arg,arg2,arg3,arg4,arg5)
-		entry_1.delete("0", END) 
-		entry_2.delete("0", END)
-		entry_3.delete("0", END)
-		combobox_trn.delete("0", END)
-		combobox_2.delete("0", END)	
-	Button_deal = tk.Button(master=frame, text='Сохранить', command=call_new_trener)
+
+	Button_deal = tk.Button(master=frame, text='Сохранить', command=lambda: new_trener(entry_1.get(), entry_2.get(), entry_3.get(), combobox_trn.get(), combobox_2.get(), frame_treners, treners))
 	Button_deal.pack(side=tk.LEFT)
 	Button_deal2 = tk.Button(master=frame, text='Отмена', command=lambda: clear_widget(work_frame))
 	Button_deal2.pack(side=tk.RIGHT)
-
 
 
 def treners():
@@ -924,13 +831,7 @@ def treners():
 	frame_clients.pack(side=tk.TOP, fill='both')	
 	Button_clients = tk.Button(master=frame_clients, text='Добавить', command=create_trener)
 	Button_clients.pack(side=tk.LEFT)
-	# Button_clients2 = tk.Button(master=frame_clients, text='Назад', command=clients)
-	# Button_clients2.pack(side=tk.LEFT)
-
-	conn = sqlite3.connect("organization.db")
-	cur = conn.cursor()
-	cur.execute("SELECT * FROM trener")
-	rows = cur.fetchall()
+	
 	tree2= ttk.Treeview(work_frame, column=("column1", "column2", "column3", "column4", "column5", "column6", "column7"), show='headings')
 	tree2.heading("#1", text="id")
 	tree2.column("#1", minwidth=40, width=50)
@@ -942,26 +843,19 @@ def treners():
 	tree2.heading("#6", text="Тип")
 	tree2.heading("#7", text="Дата внесения")
 	tree2.pack(expand=1, anchor=NW, fill="both")
-	for row in rows:
-		# print(row) # it print all records in the database
-		tree2.insert("", tk.END, values=row)
-	conn.close()
+	data = Trener.select()
+	for row in data:
+		tree2.insert("", tk.END, values=[row.id, row.First_Name, row.Last_Name, row.Phone_number, row.Type, row.Source, row.create_date])
+	
 
 ###-------------------------------------------------------------------------------------------------------------------------------------------------####
 
-def new_staff(arg,arg2,arg3,arg4,arg5):
-	Staff.create(First_Name=arg, Last_Name=arg2, Phone_number=arg3 , Type=arg4 ,  Source=arg5)
-
-
 def create_staff():
 	clear_widget(work_frame)
-	frame_deal = tk.Frame(master=work_frame, width=200, height=100, bg=color_frame_menu)
-	frame_deal.pack(side=tk.TOP, fill='both')
+	frame_staff = tk.Frame(master=work_frame, width=200, height=100, bg=color_frame_menu)
+	frame_staff.pack(side=tk.TOP, fill='both')
 
-	# frame_label_deal = Label(frame_deal, text='Создаем сделку')
-	# frame_label_deal.pack()
-
-	labelframe = LabelFrame(frame_deal, text="Новый Тренер")
+	labelframe = LabelFrame(frame_staff, text="Новый Тренер")
 	labelframe.pack(fill="both", expand="yes")
  
 	labelwork_frame = LabelFrame(labelframe, text="О Тренере")
@@ -1013,19 +907,8 @@ def create_staff():
 	labelframe5.pack(fill="both", expand="yes")
 	frame = tk.Frame(labelframe5)
 	frame.pack(side='top')
-	def call_new_staff():
-		arg = entry_1.get()
-		arg2 = entry_2.get()
-		arg3 = entry_3.get()
-		arg4 = combobox_adm.get()
-		arg5 = combobox_2.get()
-		new_staff(arg,arg2,arg3,arg4,arg5)
-		entry_1.delete("0", END) 
-		entry_2.delete("0", END)
-		entry_3.delete("0", END)
-		combobox_adm.delete("0", END)
-		combobox_2.delete("0", END)	
-	Button_deal = tk.Button(master=frame, text='Сохранить', command=call_new_staff)
+
+	Button_deal = tk.Button(master=frame, text='Сохранить', command=lambda: new_staff(entry_1.get(),entry_2.get(),entry_3.get(),combobox_adm.get(),combobox_2.get(), frame_staff, staff))
 	Button_deal.pack(side=tk.LEFT)
 	Button_deal2 = tk.Button(master=frame, text='Отмена', command=lambda: clear_widget(work_frame))
 	Button_deal2.pack(side=tk.RIGHT)
@@ -1034,17 +917,11 @@ def create_staff():
 
 def staff():
 	clear_widget(work_frame)
-	frame_clients = tk.Frame(master=work_frame, width=200, height=100, bg=color_frame_menu)
-	frame_clients.pack(side=tk.TOP, fill='both')	
-	Button_clients = tk.Button(master=frame_clients, text='Добавить', command=create_staff)
-	Button_clients.pack(side=tk.LEFT)
-	# Button_clients2 = tk.Button(master=frame_clients, text='Назад', command=clients)
-	# Button_clients2.pack(side=tk.LEFT)
+	frame_staff = tk.Frame(master=work_frame, width=200, height=100, bg=color_frame_menu)
+	frame_staff.pack(side=tk.TOP, fill='both')	
+	Button_staff = tk.Button(master=frame_staff, text='Добавить', command=create_staff)
+	Button_staff.pack(side=tk.LEFT)
 
-	conn = sqlite3.connect("organization.db")
-	cur = conn.cursor()
-	cur.execute("SELECT * FROM staff")
-	rows = cur.fetchall()
 	tree2= ttk.Treeview(work_frame, column=("column1", "column2", "column3", "column4", "column5", "column6", "column7"), show='headings')
 	tree2.heading("#1", text="id")
 	tree2.column("#1", minwidth=40, width=50)
@@ -1056,25 +933,18 @@ def staff():
 	tree2.heading("#6", text="Внес")
 	tree2.heading("#7", text="Дата внесения")
 	tree2.pack(expand=1, anchor=NW, fill="both")
-	for row in rows:
-		# print(row) # it print all records in the database
-		tree2.insert("", tk.END, values=row)
-	conn.close()
+	data = Staff.select()
+	for row in data:
+		tree2.insert("", tk.END, values=[row.id, row.First_Name, row.Last_Name, row.Phone_number, row.Type, row.Source, row.create_date])
 
 ###-------------------------------------------------------------------------------------------------------------------------------------------------####
 
-def new_warehouse(arg,arg2,arg3,arg4,arg5,arg6,arg7):
-	Warehouse.create(name=arg, description=arg2, unit=arg3 , purchase_price=arg4 ,  retail_price=arg5, quantity=arg6, reserved=arg7)
-
 def create_warehous():
 	clear_widget(work_frame)
-	frame_deal = tk.Frame(master=work_frame, width=200, height=100, bg=color_frame_menu)
-	frame_deal.pack(side=tk.TOP, fill='both')
+	frame_warehous = tk.Frame(master=work_frame, width=200, height=100, bg=color_frame_menu)
+	frame_warehous.pack(side=tk.TOP, fill='both')
 
-	# frame_label_deal = Label(frame_deal, text='Создаем сделку')
-	# frame_label_deal.pack()
-
-	labelframe = LabelFrame(frame_deal, text="Новый товар")
+	labelframe = LabelFrame(frame_warehous, text="Новый товар")
 	labelframe.pack(fill="both", expand="yes")
  
 	labelwork_frame = LabelFrame(labelframe, text="О товаре")
@@ -1102,8 +972,6 @@ def create_warehous():
 	combobox_unit = ttk.Combobox(frame, values=lst, width=48)
 	combobox_unit.current(0)
 	combobox_unit.pack(side='right', pady=6, padx=6)
-	# entry_3 = Entry(frame, width=50)
-	# entry_3.pack(side='right', pady=6, padx=6)
 
 	frame = tk.Frame(labelwork_frame)
 	frame.pack(anchor='w')
@@ -1138,25 +1006,11 @@ def create_warehous():
 	labelframe5.pack(fill="both", expand="yes")
 	frame = tk.Frame(labelframe5)
 	frame.pack(side='top')
-	def call_new_staff():
-		arg = entry_name.get()
-		arg2 = entry_description.get()
-		arg3 = combobox_unit.get()
-		arg4 = entry_purchase_price.get()
-		arg5 = entry_retail_price.get()
-		arg6 = entry_quantity.get()
-		arg7 = entry_reserved.get()
-		new_warehouse(arg,arg2,arg3,arg4,arg5,arg6,arg7)
-		entry_name.delete("0", END) 
-		entry_description.delete("0", END)
-		combobox_unit.delete("0", END)
-		entry_purchase_price.delete("0", END)
-		entry_retail_price.delete("0", END)	
-		entry_quantity.delete("0", END)	
-		entry_reserved.delete("0", END)	
-	Button_deal = tk.Button(master=frame, text='Сохранить', command=call_new_staff)
+	
+	Button_deal = tk.Button(master=frame, text='Сохранить', command=lambda: new_warehouse(entry_name.get(),entry_description.get(),combobox_unit.get(),entry_purchase_price.get(),
+																							entry_retail_price.get(), entry_quantity.get(), entry_reserved.get(), frame_warehous, warehouse))
 	Button_deal.pack(side=tk.LEFT)
-	Button_deal2 = tk.Button(master=frame, text='Отмена', command=warehouse)
+	Button_deal2 = tk.Button(master=frame, text='Отмена', command=lambda: close_window(frame_warehous,warehouse))
 	Button_deal2.pack(side=tk.RIGHT)	
 
 def warehouse():
@@ -1166,10 +1020,6 @@ def warehouse():
 	Button_deal = tk.Button(master=frame_deal, text='Добавить товар', command=create_warehous)
 	Button_deal.pack(side=tk.LEFT)
 
-	conn = sqlite3.connect("organization.db")
-	cur = conn.cursor()
-	cur.execute("SELECT id, name, retail_price, quantity, reserved FROM warehouse")
-	rows = cur.fetchall()
 	tree2= ttk.Treeview(work_frame, column=("column1", "column2", "column3", "column4", "column5"), show='headings')
 	tree2.heading("#1", text="id")
 	tree2.column("#1", minwidth=30, width=40)
@@ -1182,10 +1032,9 @@ def warehouse():
 	tree2.heading("#5", text="Зарезервировано")
 	tree2.column("#5", minwidth=120, width=120)
 	tree2.pack(expand=1, anchor=NW, fill="both")
-	for row in rows:
-		# print(row) # it print all records in the database
-		tree2.insert("", tk.END, values=row)
-	conn.close()
+	data = Warehouse.select(Warehouse.id, Warehouse.name, Warehouse.retail_price, Warehouse.quantity,Warehouse.reserved)
+	for row in data:
+		tree2.insert("", tk.END, values=[row.id, row.name, row.retail_price, row.quantity,row.reserved ])
 
 ###-------------------------------------------------------------------------------------------------------------------------------------------------####
 
@@ -1218,18 +1067,12 @@ def inventory_control(): # Окно Складского учета
 
 ###-------------------------------------------------------------------------------------------------------------------------------------------------####
 
-def new_services(arg,arg2,arg3,arg4):
-	Service.create(name=arg, description=arg2, retail_price=arg3, quantity=arg4)
-
 def create_services():
 	clear_widget(work_frame)
-	frame_deal = tk.Frame(master=work_frame, width=200, height=100, bg=color_frame_menu)
-	frame_deal.pack(side=tk.TOP, fill='both')
+	frame_services = tk.Frame(master=work_frame, width=200, height=100, bg=color_frame_menu)
+	frame_services.pack(side=tk.TOP, fill='both')
 
-	# frame_label_deal = Label(frame_deal, text='Создаем сделку')
-	# frame_label_deal.pack()
-
-	labelframe = LabelFrame(frame_deal, text="Новая услуга")
+	labelframe = LabelFrame(frame_services, text="Новая услуга")
 	labelframe.pack(fill="both", expand="yes")
  
 	labelwork_frame = LabelFrame(labelframe, text="Об услуге")
@@ -1267,19 +1110,11 @@ def create_services():
 	labelframe5.pack(fill="both", expand="yes")
 	frame = tk.Frame(labelframe5)
 	frame.pack(side='top')
-	def call_new_servise():
-		arg = entry_name.get()
-		arg2 = entry_description.get()
-		arg3 = entry_retail_price.get()
-		arg4 = entry_quantity.get()
-		new_services(arg,arg2,arg3,arg4)
-		entry_name.delete("0", END) 
-		entry_description.delete("0", END)
-		entry_retail_price.delete("0", END)	
-		entry_quantity.delete("0", END)	
-	Button_deal = tk.Button(master=frame, text='Сохранить', command=call_new_servise)
+	
+	Button_deal = tk.Button(master=frame, text='Сохранить', command=lambda: new_services(entry_name.get(), entry_description.get(),entry_retail_price.get(),
+																			entry_quantity.get(),frame_services, services))
 	Button_deal.pack(side=tk.LEFT)
-	Button_deal2 = tk.Button(master=frame, text='Отмена', command=services)
+	Button_deal2 = tk.Button(master=frame, text='Отмена', command=lambda: close_window(frame_services, services))
 	Button_deal2.pack(side=tk.RIGHT)
 
 
@@ -1291,10 +1126,6 @@ def services():
 	Button_deal = tk.Button(master=frame_deal, text='Добавить Услугу', command=create_services)
 	Button_deal.pack(side=tk.LEFT)
 
-	conn = sqlite3.connect("organization.db")
-	cur = conn.cursor()
-	cur.execute("SELECT id, name, retail_price, quantity FROM service")
-	rows = cur.fetchall()
 	tree2= ttk.Treeview(work_frame, column=("column1", "column2", "column3", "column4"), show='headings')
 	tree2.heading("#1", text="id")
 	tree2.column("#1", minwidth=30, width=40)
@@ -1305,25 +1136,18 @@ def services():
 	tree2.heading("#4", text="Количество")
 	tree2.column("#4", minwidth=100, width=100)
 	tree2.pack(expand=1, anchor=E, fill="both")
-	for row in rows:
-		tree2.insert("", tk.END, values=row)
-	conn.close()
+	data = Service.select(Service.id, Service.name, Service.retail_price, Service.quantity)
+	for row in data:
+		tree2.insert("", tk.END, values=[row.id, row.name, row.retail_price, row.quantity])
 
 ###-------------------------------------------------------------------------------------------------------------------------------------------------####
 
-def new_new_applications(arg,arg2,arg3,arg4,arg5,arg6):
-	Lid.create(name=arg, telephone_number=arg2, Source=arg3, comment=arg4, responsible=arg5, status=arg6)
-
-
-def create_new_applications():
+def create_new_applications(): # Создать новую заявку
 	clear_widget(work_frame)
-	frame_deal = tk.Frame(master=work_frame, width=200, height=100, bg=color_frame_menu)
-	frame_deal.pack(side=tk.TOP, fill='both')
+	frame_new_applications = tk.Frame(master=work_frame, width=200, height=100, bg=color_frame_menu)
+	frame_new_applications.pack(side=tk.TOP, fill='both')
 
-	# frame_label_deal = Label(frame_deal, text='Создаем сделку')
-	# frame_label_deal.pack()
-
-	labelframe = LabelFrame(frame_deal, text="Новая заявка")
+	labelframe = LabelFrame(frame_new_applications, text="Новая заявка")
 	labelframe.pack(fill="both", expand="yes")
  
 	labelwork_frame = LabelFrame(labelframe, text="О заявке")
@@ -1363,39 +1187,23 @@ def create_new_applications():
 	labelframe5.pack(fill="both", expand="yes")
 	frame = tk.Frame(labelframe5)
 	frame.pack(side='top')
-	def call_new_applications():
-		arg = entry_name.get()
-		arg2 = entry_telphone.get()
-		arg3 = combobox_2.get()
-		arg4 = entry_comment.get()
-		arg5 = ADMIN
-		arg6 = 'Новая'
-		# print('В тестовом режиме заявка не вносится в БД!')
-		new_new_applications(arg,arg2,arg3,arg4,arg5,arg6)
-		entry_name.delete("0", END) 
-		entry_telphone.delete("0", END)
-		combobox_2.delete("0", END)	
-		entry_comment.delete("0", END)
-		clear_widget(work_frame)
-		new_applications()	
-	Button_deal = tk.Button(master=frame, text='Сохранить', command=call_new_applications)
+		
+	Button_deal = tk.Button(master=frame, text='Сохранить', command=lambda: new_new_applications(entry_name.get(),entry_telphone.get(),
+																			combobox_2.get(),entry_comment.get(),ADMIN,'Новая', 
+																				frame_new_applications, new_applications))
 	Button_deal.pack(side=tk.LEFT)
-	Button_deal2 = tk.Button(master=frame, text='Отмена', command=new_applications)
+	Button_deal2 = tk.Button(master=frame, text='Отмена', command=lambda: close_window(frame_new_applications, new_applications))
 	Button_deal2.pack(side=tk.RIGHT)
 
 	
 
-def new_applications():
+def new_applications():  # Новые заявки
 	clear_widget(work_frame)
 	new_applications = tk.Frame(master=work_frame, width=200, height=100, bg=color_frame_menu)
 	new_applications.pack(side=tk.TOP, fill='both')
 	Button_deal = tk.Button(master=new_applications, text='Добавить заявку', command=create_new_applications)
 	Button_deal.pack(side=tk.LEFT)
 
-	conn = sqlite3.connect("organization.db")
-	cur = conn.cursor()
-	cur.execute("SELECT id, name, telephone_number, create_date, Source, responsible, comment FROM lid WHERE status='Новая'")
-	rows = cur.fetchall()
 	tree2= ttk.Treeview(work_frame, column=("column1", "column2", "column3", "column4", "column5", "column6", "column7"), show='headings')
 	tree2.heading("#1", text="id")
 	tree2.column("#1", minwidth=30, width=40)
@@ -1412,25 +1220,18 @@ def new_applications():
 	tree2.heading("#7", text="Комментарии")
 	tree2.column("#7", minwidth=100, width=100)
 	tree2.pack(expand=1, anchor=E, fill="both")
-	for row in rows:
-		tree2.insert("", tk.END, values=row)
-	conn.close()
+	data = Lid.select(Lid.id, Lid.name, Lid.telephone_number, Lid.create_date, Lid.Source, Lid.responsible, Lid.comment)
+	for row in data:
+		tree2.insert("", tk.END, values=[row.id, row.name, row.telephone_number, row.create_date, row.Source, row.responsible, row.comment])
 
 ###-------------------------------------------------------------------------------------------------------------------------------------------------####
 
-def new_all_applications(arg,arg2,arg3,arg4,arg5,arg6):
-	Lid.create(name=arg, telephone_number=arg2, Source=arg3, comment=arg4, responsible=arg5, status=arg6)
-
-
 def create_all_applications():
 	clear_widget(work_frame)
-	frame_deal = tk.Frame(master=work_frame, width=200, height=100, bg=color_frame_menu)
-	frame_deal.pack(side=tk.TOP, fill='both')
+	frame_create_all_applications = tk.Frame(master=work_frame, width=200, height=100, bg=color_frame_menu)
+	frame_create_all_applications.pack(side=tk.TOP, fill='both')
 
-	# frame_label_deal = Label(frame_deal, text='Создаем сделку')
-	# frame_label_deal.pack()
-
-	labelframe = LabelFrame(frame_deal, text="Новая заявка")
+	labelframe = LabelFrame(frame_create_all_applications, text="Новая заявка")
 	labelframe.pack(fill="both", expand="yes")
  
 	labelwork_frame = LabelFrame(labelframe, text="О заявке")
@@ -1470,24 +1271,12 @@ def create_all_applications():
 	labelframe5.pack(fill="both", expand="yes")
 	frame = tk.Frame(labelframe5)
 	frame.pack(side='top')
-	def call_all_applications():
-		arg = entry_name.get()
-		arg2 = entry_telphone.get()
-		arg3 = combobox_2.get()
-		arg4 = entry_comment.get()
-		arg5 = ADMIN
-		arg6 = 'Новая'
-		# print('В тестовом режиме заявка не вносится в БД!')
-		new_all_applications(arg,arg2,arg3,arg4,arg5,arg6)
-		entry_name.delete("0", END) 
-		entry_telphone.delete("0", END)
-		combobox_2.delete("0", END)	
-		entry_comment.delete("0", END)
-		clear_widget(work_frame)
-		all_applications()	
-	Button_deal = tk.Button(master=frame, text='Сохранить', command=call_all_applications)
+	
+	Button_deal = tk.Button(master=frame, text='Сохранить', command=lambda: new_new_applications(entry_name.get(),entry_telphone.get(),
+																			combobox_2.get(),entry_comment.get(),ADMIN,'Новая', 
+																				frame_create_all_applications, new_applications))
 	Button_deal.pack(side=tk.LEFT)
-	Button_deal2 = tk.Button(master=frame, text='Отмена', command=all_applications)
+	Button_deal2 = tk.Button(master=frame, text='Отмена', command=close_window(frame_create_all_applications, all_applications))
 	Button_deal2.pack(side=tk.RIGHT)
 
 def all_applications():
@@ -1497,10 +1286,6 @@ def all_applications():
 		Button_deal = tk.Button(master=new_applications, text='Добавить заявку', command=create_new_applications)
 		Button_deal.pack(side=tk.LEFT)
 
-		conn = sqlite3.connect("organization.db")
-		cur = conn.cursor()
-		cur.execute("SELECT * FROM lid")
-		rows = cur.fetchall()
 		tree2= ttk.Treeview(work_frame, column=("column1", "column2", "column3", "column4", "column5", "column6", "column7", "column8"), show='headings')
 		tree2.heading("#1", text="id")
 		tree2.column("#1", minwidth=30, width=40)
@@ -1519,9 +1304,10 @@ def all_applications():
 		tree2.heading("#8", text="Статус")
 		tree2.column("#8", minwidth=100, width=100)
 		tree2.pack(expand=1, anchor=E, fill="both")
-		for row in rows:
-			tree2.insert("", tk.END, values=row)
-		conn.close()
+		data = Lid.select()
+		for row in data:
+			tree2.insert("", tk.END, values=[row.id, row.name,
+				row.telephone_number, row.create_date, row.Source, row.responsible, row.comment, row.status])
 
 ###-------------------------------------------------------------------------------------------------------------------------------------------------####
 
@@ -1657,26 +1443,26 @@ work_frame.pack(side=tk.LEFT, fill='both')
 frame_bottom = tk.Frame(master=frame1, width=1180, height=10, bg=color_frame_menu)
 frame_bottom.pack(side=tk.BOTTOM, fill='both')
 
-def clock():
-	frame1_5 = tk.Frame(master=frame_bottom, width=200, height=50, bg=color_frame_menu)
-	frame1_5.pack(fill=tk.Y, side=tk.LEFT)
+# def clock():
+# 	frame1_5 = tk.Frame(master=frame_bottom, width=200, height=50, bg=color_frame_menu)
+# 	frame1_5.pack(fill=tk.Y, side=tk.LEFT)
 	
-	time = (datetime.utcnow() + timedelta(hours = 3)).strftime('%H:%M:%S')
-	lbl_time = tk.Label(frame1_5 ,text = time, font="Arial 10")  # заранее создаем надпись
-	lbl_time.pack(padx=10, pady=5)  # размещаем ее
-	# process.switch_backend('agg')  
+# 	time = (datetime.utcnow() + timedelta(hours = 3)).strftime('%H:%M:%S')
+# 	lbl_time = tk.Label(frame1_5 ,text = time, font="Arial 10")  # заранее создаем надпись
+# 	lbl_time.pack(padx=10, pady=5)  # размещаем ее
+# 	# process.switch_backend('agg')  
 
-	def clock_update():  # создаем функцию
-		while True:
-			# Постоянно меняем значение у наших часов
-			try:
-				lbl_time['text'] = (datetime.utcnow() + timedelta(hours = 3)).strftime('%H:%M:%S')
-				sleep(0.5)  # засыпаем на половину секунды, чтобы не перегружать процесс постоянными обновлениями
-			except:
-				break				
-	process = threading.Thread(target=clock_update)  # Создаем процесс, в котором будем обновлять наши часы
-	process.start()  # Запускаем процесс
-clock()
+# 	def clock_update():  # создаем функцию
+# 		while True:
+# 			# Постоянно меняем значение у наших часов
+# 			try:
+# 				lbl_time['text'] = (datetime.utcnow() + timedelta(hours = 3)).strftime('%H:%M:%S')
+# 				sleep(0.5)  # засыпаем на половину секунды, чтобы не перегружать процесс постоянными обновлениями
+# 			except:
+# 				break				
+# 	process = threading.Thread(target=clock_update)  # Создаем процесс, в котором будем обновлять наши часы
+# 	process.start()  # Запускаем процесс
+clock(frame_bottom, color_frame_menu)
 
 def user():
 	frame1_6 = tk.Frame(master=frame_bottom, width=200, height=50, bg=color_frame_menu)
