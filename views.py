@@ -1,5 +1,6 @@
 from models_DB import *  # Data Base
 import tkinter as tk
+from tkinter import BOTH, END, LEFT, messagebox 
 
 import threading  # Импортируем модель для дополнительных процессов
 import tkinter as tk
@@ -50,6 +51,57 @@ def new_new_applications(arg,arg2,arg3,arg4,arg5,arg6,parent,open_window):
 def close_window(parent, open_window):  # Закрыть окно
 	parent.destroy()
 	open_window()
+
+
+class TableSearch(): # parent, 
+	"""docstring for TableSearch"""
+	def __init__(self, parent, treeview, DB, function):
+		super(TableSearch, self).__init__()
+		self.parent = parent
+		self.treeview = treeview
+		self.function = function
+		self.DB = DB
+		self.entry()
+		self.clear()
+
+	def search(self):
+
+		self.desired = self.Entry_search.get()
+
+		try:
+			db = self.DB.select().where(self.DB.First_Name.contains(self.desired))
+
+			if (len(self.desired) < 2) or (not self.desired.isalpha()):
+				messagebox.showerror("Ошибка!", "Имя указано не верно!")
+				self.function()
+			else:
+				self.treeview.selection()
+				fetchdata = self.treeview.get_children()
+
+				for f in fetchdata:
+					self.treeview.delete(f)
+
+				for d in db:
+					self.treeview.insert("", END, values=[d.id, d.First_Name, d.Last_Name, d.Phone_number])
+
+		except Exception as e:
+			messagebox.showerror("issue", e)	
+	
+	def entry(self):
+		self.Entry_search = tk.Entry(self.parent, width=50)
+		self.Entry_search.pack(side=tk.LEFT, pady=6, padx=6)
+		Button_search = tk.Button(master=self.parent, text='Найти', command=self.search)
+		Button_search.pack(side=tk.LEFT)
+
+	def reset_search(self):
+		self.Entry_search.delete("0", END)
+		self.function()
+
+	def clear(self):	
+		Button_clear = tk.Button(master=self.parent, text='Очистить', command=self.reset_search)
+		Button_clear.pack(side=tk.LEFT)		
+		
+
 
 
 

@@ -7,7 +7,7 @@ import sqlite3
 from peewee import *
 from ttkwidgets.autocomplete import AutocompleteCombobox
 from views import clear_widget, new_contact, close_window, new_deal, new_trener, new_staff, new_warehouse, new_services, new_new_applications, clock # search_for_table
-
+from views import TableSearch
 
 # Data Base
 from models_DB import *
@@ -58,59 +58,11 @@ menu = Menu(window)
 window.config(menu=menu)
 
 ###-------------------------------------------------------------------------------------------------------------------------------------------------####
-
+# Адаптивность - Данный модуль под вопросом
 width = window.winfo_screenwidth()  # Ширина окна
 height = window.winfo_screenheight()  # Высота окна
 
 ###-------------------------------------------------------------------------------------------------------------------------------------------------####
-
-# Блок поиска по таблице (В reset_search необходимо менять вызываемую функцию)
-
-def search_for_table(parent, var, treeview, db_name, table_name, search_value, column_name, column_var,  function): 
-
-	# Поиск по указанной таблице
-	def search(treeview, desired, db_name, table_name, column_var):
-		treeview.selection()
-		fetchdata = treeview.get_children()
-		for f in fetchdata:
-			treeview.delete(f)
-			conn = None
-		try:
-			conn = sqlite3.connect(db_name)
-			core = conn.cursor()
-			if var==2:
-				db = f"select * from {table_name} where {search_value} = '%s' and {column_name} = '{column_var}' "
-			else:
-				db = f"select * from {table_name} where '{desired}' = '%s'"
-			name = desired.get()
-			if (len(name) < 2) or (not name.isalpha()):
-				messagebox.showerror("Ошибка!", "Имя указано не верно!")
-				function()
-			else:
-				core.execute(db %(name))
-				data = core.fetchall()
-				for d in data:
-					treeview.insert("", END, values=d)
-
-		except Exception as e:
-			messagebox.showerror("issue", e)
-
-		finally:
-			if conn is not None:
-				conn.close()
-
-	entry_search = Entry(parent, width=50)
-	entry_search.pack(side=tk.LEFT, pady=6, padx=6)
-	Button_clients2 = tk.Button(master=parent, text='Найти', command=lambda: search(treeview, entry_search, db_name, table_name, column_var))
-	Button_clients2.pack(side=tk.LEFT)
-
-	def reset_search():
-		entry_search.delete("0", END)
-		function()
-	Button_clients2 = tk.Button(master=parent, text='Очистить', command=reset_search)
-	Button_clients2.pack(side=tk.LEFT)		
-
-###-------------------------------------------------------------------------------------------------------------------------------------------------####    
 
 def create_contact():
 	clear_widget(work_frame)
@@ -257,7 +209,7 @@ def clients():
 
 	for row in data:
 		tree2.insert("", tk.END, values=[row.id, row.First_Name, row.Last_Name, row.Phone_number, row.Type, row.Source, row.create_date])
-	search_for_table(frame_clients, 2, tree2, 'organization.db', 'Contact', 'First_Name', 'Type', 'Клиент',  clients)
+	TableSearch(frame_clients, tree2, Contact, clients)	
 
 ###-------------------------------------------------------------------------------------------------------------------------------------------------####
 
