@@ -1,4 +1,19 @@
 {
-	"lable": "CRM - Ударник Алексеевская"
+	"lable": "CRM - Ударник Алексеевская",
+	"color_button_menu": "grey90",
+	"color_frame_menu": "grey80",
+	"color_label_menu": "color_frame_menu",
+	
+	"font_lable_menu": [
+		"Montserrat",
+		"14"
+	],
+
+	"font_button_menu": [
+		"Montserrat", 
+		"10"
+	],
+
+	"button_width":  "18"
 
 }

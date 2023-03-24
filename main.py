@@ -6,6 +6,8 @@ from tkcalendar import Calendar, DateEntry
 import sqlite3
 from peewee import *
 from ttkwidgets.autocomplete import AutocompleteCombobox
+from views import clear_widget, new_contact, close_window, new_deal, new_trener, new_staff, new_warehouse, new_services, new_new_applications, clock # search_for_table
+
 
 # Data Base
 from models_DB import *
@@ -19,16 +21,7 @@ Service.create_table()
 Client.create_table()
 Lid.create_table()
 
-#
-
-# Часы
-# import threading  # Импортируем модель для дополнительных процессов
-# import tkinter as tk
-# from time import sleep
 from datetime import timedelta, datetime
-
-# # Таймер
-# import time
 
 # Парсер заявок
 from mail.postal_data import MAIL, PASSWORD, PASSWORD_MAIL_APP  # Отредактировать данные в файле
@@ -40,14 +33,16 @@ from sys import stderr
 from traceback import print_exc
 import email
 
-from views import clear_widget, new_contact, close_window, new_deal, new_trener, new_staff, new_warehouse, new_services, new_new_applications, clock # search_for_table
 
 """ Битрикс24 => Клиенты """
 """ Унифицировать функцию поиска по таблицам """
 
 ADMIN = 'Тихон'
 
-from settings.settings import LABLE
+# Стилистические переменные
+from settings.settings import *
+
+color_label_menu = color_frame_menu
 
 ###-------------------------------------------------------------------------------------------------------------------------------------------------####
 
@@ -1343,19 +1338,6 @@ menu.add_cascade(label='Выход', command = onExit)
 
 ###-------------------------------------------------------------------------------------------------------------------------------------------------####
 
-# Стилистические переменные
-
-color_button_menu = "grey90"
-color_frame_menu = "grey80"
-color_label_menu = color_frame_menu
-
-font_lable_menu = ("Montserrat",14)
-font_button_menu = ("Montserrat",10)
-
-button_width = 18
-
-###-------------------------------------------------------------------------------------------------------------------------------------------------####
-
 # Левый меню-бар
 
 frame1 = tk.Frame(master=window, width=200, height=100, bg=color_frame_menu)
@@ -1443,26 +1425,7 @@ work_frame.pack(side=tk.LEFT, fill='both')
 frame_bottom = tk.Frame(master=frame1, width=1180, height=10, bg=color_frame_menu)
 frame_bottom.pack(side=tk.BOTTOM, fill='both')
 
-# def clock():
-# 	frame1_5 = tk.Frame(master=frame_bottom, width=200, height=50, bg=color_frame_menu)
-# 	frame1_5.pack(fill=tk.Y, side=tk.LEFT)
-	
-# 	time = (datetime.utcnow() + timedelta(hours = 3)).strftime('%H:%M:%S')
-# 	lbl_time = tk.Label(frame1_5 ,text = time, font="Arial 10")  # заранее создаем надпись
-# 	lbl_time.pack(padx=10, pady=5)  # размещаем ее
-# 	# process.switch_backend('agg')  
-
-# 	def clock_update():  # создаем функцию
-# 		while True:
-# 			# Постоянно меняем значение у наших часов
-# 			try:
-# 				lbl_time['text'] = (datetime.utcnow() + timedelta(hours = 3)).strftime('%H:%M:%S')
-# 				sleep(0.5)  # засыпаем на половину секунды, чтобы не перегружать процесс постоянными обновлениями
-# 			except:
-# 				break				
-# 	process = threading.Thread(target=clock_update)  # Создаем процесс, в котором будем обновлять наши часы
-# 	process.start()  # Запускаем процесс
-clock(frame_bottom, color_frame_menu)
+clock(frame_bottom, color_frame_menu)  # Часы
 
 def user():
 	frame1_6 = tk.Frame(master=frame_bottom, width=200, height=50, bg=color_frame_menu)
