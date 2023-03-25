@@ -209,84 +209,9 @@ def clients():
 
 	for row in data:
 		tree2.insert("", tk.END, values=[row.id, row.First_Name, row.Last_Name, row.Phone_number, row.Type, row.Source, row.create_date])
-	TableSearch(frame_clients, tree2, Contact, clients)	
+	TableSearch(frame_clients, tree2, Contact, 'First_Name', clients)	
 
 ###-------------------------------------------------------------------------------------------------------------------------------------------------####
-
-def contact_selection():
-	clear_widget(work_frame)
-	a = tk.Toplevel()
-	a.geometry("750x700+400+50")
-	a.resizable(0, 0)
-	# a['bg'] = 'grey'
-	a.overrideredirect(True)
-	
-	def show():
-		ws_ent.delete(0, END)
-		ws_ent.focus()
-		treeview.selection()
-		
-		conn = sqlite3.connect("organization.db")
-		cur = conn.cursor()
-		cur.execute("SELECT * FROM contact ORDER BY First_Name DESC")
-		rows = cur.fetchall()
-		fetchdata = treeview.get_children()
-		for elements in fetchdata:
-			treeview.delete(elements)
-	
-		data = cur.fetchall()
-		for d in data:
-			treeview.insert("", END, values=d.First_Name)
-
-
-	def search():
-		treeview.selection()
-		fetchdata = treeview.get_children()
-		for f in fetchdata:
-			treeview.delete(f)
-		
-		db = Client.select().where(First_Name == '%s')
-		name = ws_ent.get()
-		if (len(name) < 2) or (not name.isalpha()):
-			showerror("fail", "invalid name")
-		else:
-			core.execute(db %(name))
-			data = core.fetchall()
-			for d in data:
-				treeview.insert("", END, values=d)
-	
-	def reset():
-		show()
-	
-	scrollbarx = Scrollbar(a, orient=HORIZONTAL)  
-	scrollbary = Scrollbar(a, orient=VERTICAL)    
-	treeview = ttk.Treeview(a, columns=("rollno", "name"), show='headings', height=22)  
-	treeview.pack()
-	treeview.heading('rollno', text="Roll No", anchor=CENTER)
-	treeview.column("rollno", stretch=NO, width = 100) 
-	treeview.heading('name', text="Name", anchor=CENTER)
-	treeview.column("name", stretch=NO)
-	scrollbary.config(command=treeview.yview)
-	scrollbary.place(x = 526, y = 7)
-	scrollbarx.config(command=treeview.xview)
-	scrollbarx.place(x = 220, y = 460)
-	style = ttk.Style()
-	style.theme_use("default")
-	style.map("Treeview")
-	
-	
-	ws_lbl = Label(a, text = "Name", font=('calibri', 12, 'normal'))
-	ws_lbl.place(x = 290, y = 518)
-	ws_ent = Entry(a,  width = 20, font=('Arial', 15, 'bold'))
-	ws_ent.place(x = 220, y = 540)
-	ws_btn1 = Button(a, text = 'Search',  width = 8, font=('calibri', 12, 'normal'), command = search)
-	ws_btn1.place(x = 480, y = 540)
-	ws_btn2 = Button(a, text = 'Reset',  width = 8, font=('calibri', 12, 'normal'), command = reset)
-	ws_btn2.place(x = 600, y = 540)
-
-
-	show()
-
 
 def create_deal():
 	clear_widget(work_frame)
@@ -323,14 +248,6 @@ def create_deal():
 	cal_date = DateEntry(frame, width=12, background='darkblue', locale='ru_RU',
 					foreground='white', borderwidth=2, year=2023)
 	cal_date.pack(padx=10, pady=10)
-
-	# countries = [
-	# 	'Antigua and Barbuda', 'Bahamas','Barbados','Belize', 'Canada',
-	# 	'Costa Rica ', 'Cuba', 'Dominica', 'Dominican Republic', 'El Salvador ',
-	# 	'Grenada', 'Guatemala ', 'Haiti', 'Honduras ', 'Jamaica', 'Mexico',
-	# 	'Nicaragua', 'Saint Kitts and Nevis', 'Panama ', 'Saint Lucia',
-	# 	'Saint Vincent and the Grenadines', 'Trinidad and Tobago', 'United States of America'
-	# 	]
 
 	countries =	[]
 
@@ -468,45 +385,8 @@ def history_deal():
 										t.tip, t.source, t.date_the_start, 
 										t.responsible, t.comment))
 
-	# Поиск по указанной таблице
-	def search_deal():
-		tree.selection()
-		fetchdata = tree.get_children()
-		for f in fetchdata:
-			tree.delete(f)
-			conn = None
-		try:
-			conn = sqlite3.connect('organization.db')
-			core = conn.cursor()
-			
-			db = f"select * from Deal where client_first_name = '%s' "
-			
-			name = entry_search.get()
-			if (len(name) < 2) or (not name.isalpha()):
-				messagebox.showerror("Ошибка!", "Имя указано не верно!")
-				deal()
-			else:
-				core.execute(db %(name))
-				data = core.fetchall()
-				for d in data:
-					tree.insert("", END, values=d)
-
-		except Exception as e:
-			messagebox.showerror("issue", e)
-
-		finally:
-			if conn is not None:
-				conn.close()
-
-	entry_search = Entry(frame_history_deal, width=50)
-	entry_search.pack(side=tk.LEFT, pady=6, padx=6)
-	Button_clients2 = tk.Button(master=frame_history_deal, text='Найти', command=lambda: search_deal())
-	Button_clients2.pack(side=tk.LEFT)
-	def reset_search():
-		entry_search.delete("0", END)
-		deal_now()
-	Button_clients2 = tk.Button(master=frame_history_deal, text='Очистить', command=reset_search)
-	Button_clients2.pack(side=tk.LEFT)
+	# Поиск по таблице
+	TableSearch(frame_history_deal, tree, Deal, 'client_first_name', history_deal)
 
 	# Взаимодействие с таблицей
 	def item_selected(event): # Выделение фрагмента таблицы
@@ -567,48 +447,8 @@ def deal_now():
 										t.tip, t.source, t.date_the_start, 
 										t.responsible, t.comment))
 
-
-
-
-	# Поиск по указанной таблице
-	def search_deal():
-		tree.selection()
-		fetchdata = tree.get_children()
-		for f in fetchdata:
-			tree.delete(f)
-			conn = None
-		try:
-			conn = sqlite3.connect('organization.db')
-			core = conn.cursor()
-			
-			db = f"select * from Deal where client_first_name = '%s' "
-			
-			name = entry_search.get()
-			if (len(name) < 2) or (not name.isalpha()):
-				messagebox.showerror("Ошибка!", "Имя указано не верно!")
-				deal()
-			else:
-				core.execute(db %(name))
-				data = core.fetchall()
-				for d in data:
-					tree.insert("", END, values=d)
-
-		except Exception as e:
-			messagebox.showerror("issue", e)
-
-		finally:
-			if conn is not None:
-				conn.close()
-
-	entry_search = Entry(frame_deal, width=50)
-	entry_search.pack(side=tk.LEFT, pady=6, padx=6)
-	Button_clients2 = tk.Button(master=frame_deal, text='Найти', command=lambda: search_deal())
-	Button_clients2.pack(side=tk.LEFT)
-	def reset_search():
-		entry_search.delete("0", END)
-		deal_now()
-	Button_clients2 = tk.Button(master=frame_deal, text='Очистить', command=reset_search)
-	Button_clients2.pack(side=tk.LEFT)
+	# Поиск по таблице
+	TableSearch(frame_deal, tree, Deal, 'client_first_name', deal_now)
 
 
 	# Взаимодействие с таблицей
@@ -788,6 +628,8 @@ def treners():
 	for row in data:
 		tree2.insert("", tk.END, values=[row.id, row.First_Name, row.Last_Name, row.Phone_number, row.Type, row.Source, row.create_date])
 	
+	# Поиск по таблице
+	TableSearch(frame_treners, tree2, Trener, 'First_Name', treners)
 
 ###-------------------------------------------------------------------------------------------------------------------------------------------------####
 
@@ -878,7 +720,7 @@ def staff():
 	data = Staff.select()
 	for row in data:
 		tree2.insert("", tk.END, values=[row.id, row.First_Name, row.Last_Name, row.Phone_number, row.Type, row.Source, row.create_date])
-
+	TableSearch(frame_staff, tree2, Staff, 'First_Name', staff)
 ###-------------------------------------------------------------------------------------------------------------------------------------------------####
 
 def create_warehous():
@@ -955,29 +797,29 @@ def create_warehous():
 	Button_deal2 = tk.Button(master=frame, text='Отмена', command=lambda: close_window(frame_warehous,warehouse))
 	Button_deal2.pack(side=tk.RIGHT)	
 
-def warehouse():
+def warehouse():  # Товар
 	clear_widget(work_frame)
-	frame_deal = tk.Frame(master=work_frame, width=200, height=100, bg=color_frame_menu)
-	frame_deal.pack(side=tk.TOP, fill='both')
-	Button_deal = tk.Button(master=frame_deal, text='Добавить товар', command=create_warehous)
+	frame_warehouse = tk.Frame(master=work_frame, width=200, height=100, bg=color_frame_menu)
+	frame_warehouse.pack(side=tk.TOP, fill='both')
+	Button_deal = tk.Button(master=frame_warehouse, text='Добавить товар', command=create_warehous)
 	Button_deal.pack(side=tk.LEFT)
 
-	tree2= ttk.Treeview(work_frame, column=("column1", "column2", "column3", "column4", "column5"), show='headings')
-	tree2.heading("#1", text="id")
-	tree2.column("#1", minwidth=30, width=40)
-	tree2.heading("#2", text="Наименование")
-	tree2.column("#2", minwidth=250, width=550)
-	tree2.heading("#3", text="Розничнвя цена")
-	tree2.column("#3", minwidth=100, width=100)
-	tree2.heading("#4", text="Количество")
-	tree2.column("#4", minwidth=100, width=100)
-	tree2.heading("#5", text="Зарезервировано")
-	tree2.column("#5", minwidth=120, width=120)
-	tree2.pack(expand=1, anchor=NW, fill="both")
+	tree_warehouse= ttk.Treeview(work_frame, column=("column1", "column2", "column3", "column4", "column5"), show='headings')
+	tree_warehouse.heading("#1", text="id")
+	tree_warehouse.column("#1", minwidth=30, width=40)
+	tree_warehouse.heading("#2", text="Наименование")
+	tree_warehouse.column("#2", minwidth=250, width=550)
+	tree_warehouse.heading("#3", text="Розничнвя цена")
+	tree_warehouse.column("#3", minwidth=100, width=100)
+	tree_warehouse.heading("#4", text="Количество")
+	tree_warehouse.column("#4", minwidth=100, width=100)
+	tree_warehouse.heading("#5", text="Зарезервировано")
+	tree_warehouse.column("#5", minwidth=120, width=120)
+	tree_warehouse.pack(expand=1, anchor=NW, fill="both")
 	data = Warehouse.select(Warehouse.id, Warehouse.name, Warehouse.retail_price, Warehouse.quantity,Warehouse.reserved)
 	for row in data:
-		tree2.insert("", tk.END, values=[row.id, row.name, row.retail_price, row.quantity,row.reserved ])
-
+		tree_warehouse.insert("", tk.END, values=[row.id, row.name, row.retail_price, row.quantity,row.reserved ])
+	TableSearch(frame_warehouse, tree_warehouse, Warehouse, 'name', warehouse)
 ###-------------------------------------------------------------------------------------------------------------------------------------------------####
 
 def inventory_control(): # Окно Складского учета
@@ -1063,25 +905,25 @@ def create_services():
 
 def services():
 	clear_widget(work_frame)
-	frame_deal = tk.Frame(master=work_frame, width=200, height=100, bg=color_frame_menu)
-	frame_deal.pack(side=tk.TOP, fill='both')
-	Button_deal = tk.Button(master=frame_deal, text='Добавить Услугу', command=create_services)
+	frame_services = tk.Frame(master=work_frame, width=200, height=100, bg=color_frame_menu)
+	frame_services.pack(side=tk.TOP, fill='both')
+	Button_deal = tk.Button(master=frame_services, text='Добавить Услугу', command=create_services)
 	Button_deal.pack(side=tk.LEFT)
 
-	tree2= ttk.Treeview(work_frame, column=("column1", "column2", "column3", "column4"), show='headings')
-	tree2.heading("#1", text="id")
-	tree2.column("#1", minwidth=30, width=40)
-	tree2.heading("#2", text="Наименование")
-	tree2.column("#2", minwidth=250, width=550)
-	tree2.heading("#3", text="Розничнвя цена")
-	tree2.column("#3", minwidth=100, width=100)
-	tree2.heading("#4", text="Количество")
-	tree2.column("#4", minwidth=100, width=100)
-	tree2.pack(expand=1, anchor=E, fill="both")
+	tree_services = ttk.Treeview(work_frame, column=("column1", "column2", "column3", "column4"), show='headings')
+	tree_services.heading("#1", text="id")
+	tree_services.column("#1", minwidth=30, width=40)
+	tree_services.heading("#2", text="Наименование")
+	tree_services.column("#2", minwidth=250, width=550)
+	tree_services.heading("#3", text="Розничнвя цена")
+	tree_services.column("#3", minwidth=100, width=100)
+	tree_services.heading("#4", text="Количество")
+	tree_services.column("#4", minwidth=100, width=100)
+	tree_services.pack(expand=1, anchor=E, fill="both")
 	data = Service.select(Service.id, Service.name, Service.retail_price, Service.quantity)
 	for row in data:
-		tree2.insert("", tk.END, values=[row.id, row.name, row.retail_price, row.quantity])
-
+		tree_services.insert("", tk.END, values=[row.id, row.name, row.retail_price, row.quantity])
+	TableSearch(frame_services, tree_services, Service, 'name', services)
 ###-------------------------------------------------------------------------------------------------------------------------------------------------####
 
 def create_new_applications(): # Создать новую заявку

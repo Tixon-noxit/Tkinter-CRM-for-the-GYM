@@ -55,11 +55,12 @@ def close_window(parent, open_window):  # Закрыть окно
 
 class TableSearch(): # parent, 
 	"""docstring for TableSearch"""
-	def __init__(self, parent, treeview, DB, function):
+	def __init__(self, parent, treeview, DB, search_field, function):
 		super(TableSearch, self).__init__()
 		self.parent = parent
 		self.treeview = treeview
 		self.function = function
+		self.search_field = search_field
 		self.DB = DB
 		self.entry()
 		self.clear()
@@ -68,21 +69,45 @@ class TableSearch(): # parent,
 
 		self.desired = self.Entry_search.get()
 
-		try:
-			db = self.DB.select().where(self.DB.First_Name.contains(self.desired))
-
-			if (len(self.desired) < 2) or (not self.desired.isalpha()):
+		if (len(self.desired) < 2) or (not self.desired.isalpha()):
 				messagebox.showerror("Ошибка!", "Имя указано не верно!")
 				self.function()
-			else:
-				self.treeview.selection()
-				fetchdata = self.treeview.get_children()
+		else:
+			self.treeview.selection()
+			fetchdata = self.treeview.get_children()
 
-				for f in fetchdata:
-					self.treeview.delete(f)
-
+			for f in fetchdata:
+				self.treeview.delete(f)
+		
+		try:
+			# Problem !!!
+			if self.DB == Deal:
+				db = self.DB.select().where(self.DB.client_first_name.contains(self.desired))
 				for d in db:
-					self.treeview.insert("", END, values=[d.id, d.First_Name, d.Last_Name, d.Phone_number])
+					self.treeview.insert("", END, values=[d.id, d.summ, d.stady, 
+								d.create_date, d.client_first_name, d.client_last_name, d.tip, d.source, 
+								d.date_the_start, d.responsible, d.comment])
+
+			elif self.DB == Trener:	
+				db = self.DB.select().where(self.DB.First_Name.contains(self.desired))
+				for d in db:
+					self.treeview.insert("", END, values=[d.id, d.First_Name, d.Last_Name, d.Phone_number, d.Type, d.Source, d.create_date])
+
+			elif self.DB == Warehouse:
+				db = self.DB.select().where(self.DB.name.contains(self.desired))
+				for d in db:
+					self.treeview.insert("", END, values=[d.id, d.name, d.purchase_price, d.quantity, d.reserved])
+
+			elif self.DB == Service:
+				db = self.DB.select().where(self.DB.name.contains(self.desired))
+				for d in db:
+					self.treeview.insert("", END, values=[d.id, d.name, d.retail_price, d.quantity])
+
+
+			elif self.DB == Contact or Staff:
+				db = self.DB.select().where(self.DB.First_Name.contains(self.desired))	
+				for d in db:
+					self.treeview.insert("", END, values=[d.id, d.First_Name, d.Last_Name, d.Phone_number])						
 
 		except Exception as e:
 			messagebox.showerror("issue", e)	
