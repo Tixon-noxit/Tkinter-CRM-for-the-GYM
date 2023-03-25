@@ -53,8 +53,8 @@ def close_window(parent, open_window):  # Закрыть окно
 	open_window()
 
 
-class TableSearch(): # parent, 
-	"""docstring for TableSearch"""
+class TableSearch():
+	""" Поиск по таблице """
 	def __init__(self, parent, treeview, DB, search_field, function):
 		super(TableSearch, self).__init__()
 		self.parent = parent
@@ -64,6 +64,7 @@ class TableSearch(): # parent,
 		self.DB = DB
 		self.entry()
 		self.clear()
+
 
 	def search(self):
 
@@ -80,7 +81,6 @@ class TableSearch(): # parent,
 				self.treeview.delete(f)
 		
 		try:
-			# Problem !!!
 			if self.DB == Deal:
 				db = self.DB.select().where(self.DB.client_first_name.contains(self.desired))
 				for d in db:
@@ -103,11 +103,26 @@ class TableSearch(): # parent,
 				for d in db:
 					self.treeview.insert("", END, values=[d.id, d.name, d.retail_price, d.quantity])
 
+			elif self.DB == Contact and self.search_field == 'Поставщик':
+				db = self.DB.select().where(self.DB.First_Name.contains(self.desired), self.DB.Type == 'Поставщик')	
+				for d in db:
+					self.treeview.insert("", END, values=[d.id, d.First_Name, d.Last_Name, d.Phone_number])
 
-			elif self.DB == Contact or Staff:
+
+			elif self.DB == Contact and self.search_field == 'Клиент':
+				db = self.DB.select().where(self.DB.First_Name.contains(self.desired), self.DB.Type == 'Клиент')	
+				for d in db:
+					self.treeview.insert("", END, values=[d.id, d.First_Name, d.Last_Name, d.Phone_number])		
+
+			elif self.DB == Contact and self.search_field == 'Контакт':
 				db = self.DB.select().where(self.DB.First_Name.contains(self.desired))	
 				for d in db:
-					self.treeview.insert("", END, values=[d.id, d.First_Name, d.Last_Name, d.Phone_number])						
+					self.treeview.insert("", END, values=[d.id, d.First_Name, d.Last_Name, d.Phone_number])
+
+			elif self.DB == Staff:
+				db = self.DB.select().where(self.DB.First_Name.contains(self.desired))	
+				for d in db:
+					self.treeview.insert("", END, values=[d.id, d.First_Name, d.Last_Name, d.Phone_number])										
 
 		except Exception as e:
 			messagebox.showerror("issue", e)	
@@ -130,7 +145,107 @@ class TableSearch(): # parent,
 
 
 
+class TableInteraction(object):
+	""" Взаимодействие с таблицей """
+	def __init__(self, parent, treeview):
+		super(TableInteraction, self).__init__()
+		self.parent= parent
+		self.treeview = treeview
 
+		self.innteraction()
+			
+	def innteraction(self):
+		def createNewWindow(arg):
+			newWindow = tk.Toplevel(self.parent)
+			try:
+				if arg[0]:
+					labelExample0 = tk.Label(newWindow, text = arg[0])
+					labelExample0.pack()
+			except:
+				pass
+
+			try:	
+				if arg[1]:	
+					labelExample1 = tk.Label(newWindow, text = arg[1])
+					labelExample1.pack()
+			except:
+				pass
+						
+			try:
+				if arg[2]:	
+					labelExample2 = tk.Label(newWindow, text = arg[2])
+					labelExample2.pack()
+			except:
+				pass
+						
+			try:
+				if arg[3]:	
+					labelExample3 = tk.Label(newWindow, text = arg[3])
+					labelExample3.pack()
+			except:
+				pass		
+
+			try:	
+				if arg[4]:	
+					labelExample4 = tk.Label(newWindow, text = arg[4])
+					labelExample4.pack()
+			except:
+				pass
+						
+			try:	
+				if arg[5]:	
+					labelExample5 = tk.Label(newWindow, text = arg[5])
+					labelExample5.pack()
+			except:
+				pass
+
+			try:				
+				if arg[6]:
+					labelExample6 = tk.Label(newWindow, text = arg[6])
+					labelExample6.pack()
+			except:
+				pass
+						
+			try:
+				if arg[7]:	
+					labelExample7 = tk.Label(newWindow, text = arg[7])
+					labelExample7.pack()
+			except:
+				pass
+						
+			try:		
+				if arg[8]:	
+					labelExample8 = tk.Label(newWindow, text = arg[8])
+					labelExample8.pack()
+			except:
+				pass
+						
+			try:
+				if arg[9]:	
+					labelExample9 = tk.Label(newWindow, text = arg[9])
+					labelExample9.pack()
+			except:
+				pass
+						
+			try:
+				if arg[10]:	
+					labelExample10 = tk.Label(newWindow, text = arg[10])
+					labelExample10.pack()
+			except:
+				pass
+						
+			try:
+				if arg[11]:	
+					labelExample11 = tk.Label(newWindow, text = arg[11])
+					labelExample11.pack()
+			except:
+				pass							
+				
+		selected_people = ""																	
+		for selected_item in self.treeview.selection():									
+			item = self.treeview.item(selected_item)									
+			selected_people = item["values"]
+		createNewWindow(selected_people)
 
 
 

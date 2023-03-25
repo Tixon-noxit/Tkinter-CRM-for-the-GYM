@@ -7,7 +7,7 @@ import sqlite3
 from peewee import *
 from ttkwidgets.autocomplete import AutocompleteCombobox
 from views import clear_widget, new_contact, close_window, new_deal, new_trener, new_staff, new_warehouse, new_services, new_new_applications, clock # search_for_table
-from views import TableSearch
+from views import TableSearch, TableInteraction
 
 # Data Base
 from models_DB import *
@@ -35,7 +35,7 @@ import email
 
 
 """ Битрикс24 => Клиенты """
-""" Унифицировать функцию поиска по таблицам """
+""" При нажатии на Enter активировать сохранение формы """
 
 ADMIN = 'Тихон'
 
@@ -137,25 +137,33 @@ def contacts():
 	Button_clients2 = tk.Button(master=frame_contacts, text='Назад', command=clients)
 	Button_clients2.pack(side=tk.LEFT)
 
-	tree2= ttk.Treeview(work_frame, column=("column1", "column2", "column3", "column4", "column5", "column6", "column6"), show='headings')
-	tree2.heading("#1", text="id")
-	tree2.column("#1", minwidth=40, width=40)
-	tree2.heading("#2", text="Фамилия")
-	tree2.heading("#3", text="Имя")
-	tree2.heading("#4", text="Телефон")
-	tree2.column("#4", minwidth=80, width=100)
-	tree2.heading("#5", text="Тип")
-	tree2.column("#5", minwidth=50, width=120)
-	tree2.heading("#6", text="Источник")
-	tree2.column("#6", minwidth=120, width=150)
-	tree2.heading("#7", text="Дата создания")
-	tree2.pack(expand=1, anchor=NW, fill="both")
+	tree_contacts= ttk.Treeview(work_frame, column=("column1", "column2", "column3", "column4", "column5", "column6", "column6"), show='headings')
+	tree_contacts.heading("#1", text="id")
+	tree_contacts.column("#1", minwidth=40, width=40)
+	tree_contacts.heading("#2", text="Фамилия")
+	tree_contacts.heading("#3", text="Имя")
+	tree_contacts.heading("#4", text="Телефон")
+	tree_contacts.column("#4", minwidth=80, width=100)
+	tree_contacts.heading("#5", text="Тип")
+	tree_contacts.column("#5", minwidth=50, width=120)
+	tree_contacts.heading("#6", text="Источник")
+	tree_contacts.column("#6", minwidth=120, width=150)
+	tree_contacts.heading("#7", text="Дата создания")
+	tree_contacts.pack(expand=1, anchor=NW, fill="both")
 
 	data = Contact.select().order_by(Contact.create_date)
 
 	for row in data:
-		tree2.insert("", tk.END, values=[row.id, row.First_Name, row.Last_Name, row.Phone_number, row.Type, row.Source, row.create_date])
+		tree_contacts.insert("", tk.END, values=[row.id, row.First_Name, row.Last_Name, row.Phone_number, row.Type, row.Source, row.create_date])
 	
+	TableSearch(frame_contacts, tree_contacts, Contact, 'Контакт', contacts)
+
+	# Взаимодействие с таблицей
+	def item_selected(event):
+		TableInteraction(frame_contacts, tree_contacts)
+
+	tree_contacts.bind("<ButtonPress-3>", item_selected)
+	tree_contacts.bind("<Return>", item_selected)	
 
 
 def provider(): # Окно поставщиков
@@ -167,25 +175,32 @@ def provider(): # Окно поставщиков
 	Button_clients2 = tk.Button(master=frame_provider, text='Назад', command=clients)
 	Button_clients2.pack(side=tk.LEFT)
 
-	tree2= ttk.Treeview(work_frame, column=("column1", "column2", "column3", "column4", "column5", "column6", "column6"), show='headings')
-	tree2.heading("#1", text="id")
-	tree2.column("#1", minwidth=40, width=40)
-	tree2.heading("#2", text="Фамилия")
-	tree2.heading("#3", text="Имя")
-	tree2.heading("#4", text="Телефон")
-	tree2.column("#4", minwidth=80, width=100)
-	tree2.heading("#5", text="Тип")
-	tree2.column("#5", minwidth=50, width=120)
-	tree2.heading("#6", text="Источник")
-	tree2.column("#6", minwidth=120, width=150)
-	tree2.heading("#7", text="Дата создания")
-	tree2.pack(expand=1, anchor=NW, fill="both")
+	tree_provider= ttk.Treeview(work_frame, column=("column1", "column2", "column3", "column4", "column5", "column6", "column6"), show='headings')
+	tree_provider.heading("#1", text="id")
+	tree_provider.column("#1", minwidth=40, width=40)
+	tree_provider.heading("#2", text="Фамилия")
+	tree_provider.heading("#3", text="Имя")
+	tree_provider.heading("#4", text="Телефон")
+	tree_provider.column("#4", minwidth=80, width=100)
+	tree_provider.heading("#5", text="Тип")
+	tree_provider.column("#5", minwidth=50, width=120)
+	tree_provider.heading("#6", text="Источник")
+	tree_provider.column("#6", minwidth=120, width=150)
+	tree_provider.heading("#7", text="Дата создания")
+	tree_provider.pack(expand=1, anchor=NW, fill="both")
 
 	data = Contact.select().where(Contact.Type == 'Поставщик')
 
 	for row in data:
-		tree2.insert("", tk.END, values=[row.id, row.First_Name, row.Last_Name, row.Phone_number, row.Type, row.Source, row.create_date])	
+		tree_provider.insert("", tk.END, values=[row.id, row.First_Name, row.Last_Name, row.Phone_number, row.Type, row.Source, row.create_date])	
+	TableSearch(frame_provider, tree_provider, Contact, 'Поставщик', provider)
 
+	# Взаимодействие с таблицей
+	def item_selected(event):
+		TableInteraction(frame_provider, tree_provider)
+
+	tree_provider.bind("<ButtonPress-3>", item_selected)
+	tree_provider.bind("<Return>", item_selected)
 
 def clients():
 	clear_widget(work_frame)
@@ -196,20 +211,27 @@ def clients():
 	Button_clients2 = tk.Button(master=frame_clients, text='Поставщики', command=provider)
 	Button_clients2.pack(side=tk.LEFT)
 	
-	tree2= ttk.Treeview(work_frame, column=("column1", "column2", "column3", "column4"), show='headings')
-	tree2.heading("#1", text="id")
-	tree2.column("#1", minwidth=20, width=30)
-	tree2.heading("#2", text="Фамилия")
-	tree2.heading("#3", text="Имя")
-	tree2.heading("#4", text="Телефон")
-	tree2.column("#4", minwidth=50, width=120)
-	tree2.pack(expand=1, anchor=NW, fill="both")
+	tree_clients= ttk.Treeview(work_frame, column=("column1", "column2", "column3", "column4"), show='headings')
+	tree_clients.heading("#1", text="id")
+	tree_clients.column("#1", minwidth=20, width=30)
+	tree_clients.heading("#2", text="Фамилия")
+	tree_clients.heading("#3", text="Имя")
+	tree_clients.heading("#4", text="Телефон")
+	tree_clients.column("#4", minwidth=50, width=120)
+	tree_clients.pack(expand=1, anchor=NW, fill="both")
 
 	data = Contact.select().where(Contact.Type=='Клиент').order_by(Contact.create_date.desc())
 
 	for row in data:
-		tree2.insert("", tk.END, values=[row.id, row.First_Name, row.Last_Name, row.Phone_number, row.Type, row.Source, row.create_date])
-	TableSearch(frame_clients, tree2, Contact, 'First_Name', clients)	
+		tree_clients.insert("", tk.END, values=[row.id, row.First_Name, row.Last_Name, row.Phone_number, row.Type, row.Source, row.create_date])
+	TableSearch(frame_clients, tree_clients, Contact, 'Клиент', clients)	
+
+	# Взаимодействие с таблицей
+	def item_selected(event):
+		TableInteraction(frame_clients, tree_clients)
+
+	tree_clients.bind("<ButtonPress-3>", item_selected)
+	tree_clients.bind("<Return>", item_selected)
 
 ###-------------------------------------------------------------------------------------------------------------------------------------------------####
 
@@ -384,73 +406,69 @@ def history_deal():
 										t.client_first_name, t.client_last_name, 
 										t.tip, t.source, t.date_the_start, 
 										t.responsible, t.comment))
-
 	# Поиск по таблице
 	TableSearch(frame_history_deal, tree, Deal, 'client_first_name', history_deal)
 
-	# Взаимодействие с таблицей
-	def item_selected(event): # Выделение фрагмента таблицы
-		def createNewWindow(arg):
-			newWindow = tk.Toplevel(frame_history_deal)
-			labelExample = tk.Label(newWindow, text = arg[4])
-			buttonExample = tk.Button(newWindow, text = "New Window button")
+	def item_selected(event):
+		TableInteraction(frame_history_deal, tree)
 
-			labelExample.pack()
-			buttonExample.pack()					
-		selected_people = ""																	
-		for selected_item in tree.selection():									
-			item = tree.item(selected_item)									
-			selected_people = item["values"]
-		createNewWindow(selected_people)	
 	tree.bind("<ButtonPress-3>", item_selected)
+	tree.bind("<Return>", item_selected)
 
 
 def deal_now():
 	clear_widget(work_frame)
 	
-	frame_deal = tk.Frame(master=work_frame, width=200, height=100, bg=color_frame_menu)
-	frame_deal.pack(side=tk.TOP, fill='both')
-	Button_deal = tk.Button(master=frame_deal, text='Создать сделку', command=create_deal)
+	frame_deal_now = tk.Frame(master=work_frame, width=200, height=100, bg=color_frame_menu)
+	frame_deal_now.pack(side=tk.TOP, fill='both')
+	Button_deal = tk.Button(master=frame_deal_now, text='Создать сделку', command=create_deal)
 	Button_deal.pack(side=tk.LEFT)
-	Button_deal2 = tk.Button(master=frame_deal, text='История продаж', command=history_deal)
+	Button_deal2 = tk.Button(master=frame_deal_now, text='История продаж', command=history_deal)
 	Button_deal2.pack(side=tk.LEFT)
 
-	tree = ttk.Treeview(work_frame, column=("column1", "column2", "column3", "column4", "column5", "column6", "column7", "column8", "column9", "column10", "column11"), show ='headings')
-	tree.heading("#1", text="id")
-	tree.column("#1", minwidth=0, width=20)
-	tree.heading("#2", text="Сумма")
-	tree.column("#2", minwidth=0, width=50)
-	tree.heading("#3", text="Стадия")
-	tree.column("#3", minwidth=0, width=120)
-	tree.heading("#4", text="Дата")
-	tree.column("#4", minwidth=0, width=65)
-	tree.heading("#5", text="Фамилия")
-	tree.column("#5", minwidth=0, width=120)
-	tree.heading("#6", text="Имя")
-	tree.column("#6", minwidth=0, width=120)
-	tree.heading("#7", text="Тип")
-	tree.column("#7", minwidth=0, width=120)
-	tree.heading("#8", text="Источник")
-	tree.column("#8", minwidth=0, width=150)
-	tree.heading("#9", text="Дата начала")
-	tree.column("#9", minwidth=0, width=80)
-	tree.heading("#10", text="Ответственный")
-	tree.column("#10", minwidth=0, width=120)
-	tree.heading("#11", text="Комментарии")
-	tree.column("#11", minwidth=0, width=170)
-	tree.pack(expand=1, anchor=N, fill="both")
+	tree_deal_now = ttk.Treeview(work_frame, column=("column1", "column2", "column3", "column4", "column5", "column6", "column7", "column8", "column9", "column10", "column11"), show ='headings')
+	tree_deal_now.heading("#1", text="id")
+	tree_deal_now.column("#1", minwidth=0, width=20)
+	tree_deal_now.heading("#2", text="Сумма")
+	tree_deal_now.column("#2", minwidth=0, width=50)
+	tree_deal_now.heading("#3", text="Стадия")
+	tree_deal_now.column("#3", minwidth=0, width=120)
+	tree_deal_now.heading("#4", text="Дата")
+	tree_deal_now.column("#4", minwidth=0, width=65)
+	tree_deal_now.heading("#5", text="Фамилия")
+	tree_deal_now.column("#5", minwidth=0, width=120)
+	tree_deal_now.heading("#6", text="Имя")
+	tree_deal_now.column("#6", minwidth=0, width=120)
+	tree_deal_now.heading("#7", text="Тип")
+	tree_deal_now.column("#7", minwidth=0, width=120)
+	tree_deal_now.heading("#8", text="Источник")
+	tree_deal_now.column("#8", minwidth=0, width=150)
+	tree_deal_now.heading("#9", text="Дата начала")
+	tree_deal_now.column("#9", minwidth=0, width=80)
+	tree_deal_now.heading("#10", text="Ответственный")
+	tree_deal_now.column("#10", minwidth=0, width=120)
+	tree_deal_now.heading("#11", text="Комментарии")
+	tree_deal_now.column("#11", minwidth=0, width=170)
+	tree_deal_now.pack(expand=1, anchor=N, fill="both")
 	now = datetime.now().strftime("%d.%m.%Y")
 	table_deal = Deal.select().where(Deal.create_date == now)
 	for t in table_deal:
-		tree.insert("", tk.END, values=(t.id, t.summ, t.stady, t.create_date, 
+		tree_deal_now.insert("", tk.END, values=(t.id, t.summ, t.stady, t.create_date, 
 										t.client_first_name, t.client_last_name, 
 										t.tip, t.source, t.date_the_start, 
 										t.responsible, t.comment))
 
 	# Поиск по таблице
-	TableSearch(frame_deal, tree, Deal, 'client_first_name', deal_now)
+	TableSearch(frame_deal_now, tree_deal_now, Deal, 'client_first_name', deal_now)
 
+	# Взаимодействие с таблицей
+	def item_selected(event):
+		TableInteraction(frame_deal_now, tree_deal_now)
 
+	tree_deal_now.bind("<ButtonPress-3>", item_selected)
+	tree_deal_now.bind("<Return>", item_selected)
+
+"""---------------------МОЖНО ЛИ С ЭТИМ ЧТО-ТО СДЕЛАТЬ?------------------------------------------------------------------------------------------------------ """
 	# Взаимодействие с таблицей
 	def item_selected(event): # Выделение фрагмента таблицы
 		def createNewWindow(arg):
@@ -533,12 +551,12 @@ def deal_now():
 
 		# Получение значений выбранной строки таблицы					
 		selected_people = ""																	
-		for selected_item in tree.selection():									
-			item = tree.item(selected_item)									
+		for selected_item in tree_deal_now.selection():									
+			item = tree_deal_now.item(selected_item)									
 			selected_people = item["values"]
 		createNewWindow(selected_people)
 
-	tree.bind("<ButtonPress-3>", item_selected)
+	tree_deal_now.bind("<ButtonPress-3>", item_selected)
 ###-------------------------------------------------------------------------------------------------------------------------------------------------####
  
 def create_trener():
@@ -613,23 +631,30 @@ def treners():
 	Button_clients = tk.Button(master=frame_treners, text='Добавить', command=create_trener)
 	Button_clients.pack(side=tk.LEFT)
 	
-	tree2= ttk.Treeview(work_frame, column=("column1", "column2", "column3", "column4", "column5", "column6", "column7"), show='headings')
-	tree2.heading("#1", text="id")
-	tree2.column("#1", minwidth=40, width=50)
-	tree2.heading("#2", text="Фамилия")
-	tree2.heading("#3", text="Имя")
-	tree2.heading("#4", text="Телефон")
-	tree2.column("#4", minwidth=80, width=110)
-	tree2.heading("#5", text="Дисциплина")
-	tree2.heading("#6", text="Тип")
-	tree2.heading("#7", text="Дата внесения")
-	tree2.pack(expand=1, anchor=NW, fill="both")
+	tree_treners= ttk.Treeview(work_frame, column=("column1", "column2", "column3", "column4", "column5", "column6", "column7"), show='headings')
+	tree_treners.heading("#1", text="id")
+	tree_treners.column("#1", minwidth=40, width=50)
+	tree_treners.heading("#2", text="Фамилия")
+	tree_treners.heading("#3", text="Имя")
+	tree_treners.heading("#4", text="Телефон")
+	tree_treners.column("#4", minwidth=80, width=110)
+	tree_treners.heading("#5", text="Дисциплина")
+	tree_treners.heading("#6", text="Тип")
+	tree_treners.heading("#7", text="Дата внесения")
+	tree_treners.pack(expand=1, anchor=NW, fill="both")
 	data = Trener.select()
 	for row in data:
-		tree2.insert("", tk.END, values=[row.id, row.First_Name, row.Last_Name, row.Phone_number, row.Type, row.Source, row.create_date])
+		tree_treners.insert("", tk.END, values=[row.id, row.First_Name, row.Last_Name, row.Phone_number, row.Type, row.Source, row.create_date])
 	
 	# Поиск по таблице
-	TableSearch(frame_treners, tree2, Trener, 'First_Name', treners)
+	TableSearch(frame_treners, tree_treners, Trener, 'First_Name', treners)
+
+	# Взаимодействие с таблицей
+	def item_selected(event):
+		TableInteraction(frame_treners, tree_treners)
+
+	tree_treners.bind("<ButtonPress-3>", item_selected)
+	tree_treners.bind("<Return>", item_selected)
 
 ###-------------------------------------------------------------------------------------------------------------------------------------------------####
 
@@ -706,21 +731,30 @@ def staff():
 	Button_staff = tk.Button(master=frame_staff, text='Добавить', command=create_staff)
 	Button_staff.pack(side=tk.LEFT)
 
-	tree2= ttk.Treeview(work_frame, column=("column1", "column2", "column3", "column4", "column5", "column6", "column7"), show='headings')
-	tree2.heading("#1", text="id")
-	tree2.column("#1", minwidth=40, width=50)
-	tree2.heading("#2", text="Фамилия")
-	tree2.heading("#3", text="Имя")
-	tree2.heading("#4", text="Телефон")
-	tree2.column("#4", minwidth=80, width=110)
-	tree2.heading("#5", text="Тип")
-	tree2.heading("#6", text="Внес")
-	tree2.heading("#7", text="Дата внесения")
-	tree2.pack(expand=1, anchor=NW, fill="both")
+	tree_staff = ttk.Treeview(work_frame, column=("column1", "column2", "column3", "column4", "column5", "column6", "column7"), show='headings')
+	tree_staff.heading("#1", text="id")
+	tree_staff.column("#1", minwidth=40, width=50)
+	tree_staff.heading("#2", text="Фамилия")
+	tree_staff.heading("#3", text="Имя")
+	tree_staff.heading("#4", text="Телефон")
+	tree_staff.column("#4", minwidth=80, width=110)
+	tree_staff.heading("#5", text="Тип")
+	tree_staff.heading("#6", text="Внес")
+	tree_staff.heading("#7", text="Дата внесения")
+	tree_staff.pack(expand=1, anchor=NW, fill="both")
 	data = Staff.select()
 	for row in data:
-		tree2.insert("", tk.END, values=[row.id, row.First_Name, row.Last_Name, row.Phone_number, row.Type, row.Source, row.create_date])
-	TableSearch(frame_staff, tree2, Staff, 'First_Name', staff)
+		tree_staff.insert("", tk.END, values=[row.id, row.First_Name, row.Last_Name, row.Phone_number, row.Type, row.Source, row.create_date])
+
+	# Поиск по таблице	
+	TableSearch(frame_staff, tree_staff, Staff, 'First_Name', staff)
+
+	# Взаимодействие с таблицей
+	def item_selected(event):
+		TableInteraction(frame_staff, tree_staff)
+
+	tree_staff.bind("<ButtonPress-3>", item_selected)
+	tree_staff.bind("<Return>", item_selected)
 ###-------------------------------------------------------------------------------------------------------------------------------------------------####
 
 def create_warehous():
@@ -819,7 +853,16 @@ def warehouse():  # Товар
 	data = Warehouse.select(Warehouse.id, Warehouse.name, Warehouse.retail_price, Warehouse.quantity,Warehouse.reserved)
 	for row in data:
 		tree_warehouse.insert("", tk.END, values=[row.id, row.name, row.retail_price, row.quantity,row.reserved ])
+
+	# Поиск по таблице	
 	TableSearch(frame_warehouse, tree_warehouse, Warehouse, 'name', warehouse)
+
+	# Взаимодействие с таблицей
+	def item_selected(event):
+		TableInteraction(frame_warehouse, tree_warehouse)
+
+	tree_warehouse.bind("<ButtonPress-3>", item_selected)
+	tree_warehouse.bind("<Return>", item_selected)
 ###-------------------------------------------------------------------------------------------------------------------------------------------------####
 
 def inventory_control(): # Окно Складского учета
@@ -923,7 +966,16 @@ def services():
 	data = Service.select(Service.id, Service.name, Service.retail_price, Service.quantity)
 	for row in data:
 		tree_services.insert("", tk.END, values=[row.id, row.name, row.retail_price, row.quantity])
+
+	# Поиск по таблице
 	TableSearch(frame_services, tree_services, Service, 'name', services)
+
+	# Взаимодействие с таблицей
+	def item_selected(event):
+		TableInteraction(frame_services, tree_services)
+
+	tree_services.bind("<ButtonPress-3>", item_selected)
+	tree_services.bind("<Return>", item_selected)
 ###-------------------------------------------------------------------------------------------------------------------------------------------------####
 
 def create_new_applications(): # Создать новую заявку
@@ -983,31 +1035,31 @@ def create_new_applications(): # Создать новую заявку
 
 def new_applications():  # Новые заявки
 	clear_widget(work_frame)
-	new_applications = tk.Frame(master=work_frame, width=200, height=100, bg=color_frame_menu)
-	new_applications.pack(side=tk.TOP, fill='both')
-	Button_deal = tk.Button(master=new_applications, text='Добавить заявку', command=create_new_applications)
+	frame_new_applications = tk.Frame(master=work_frame, width=200, height=100, bg=color_frame_menu)
+	frame_new_applications.pack(side=tk.TOP, fill='both')
+	Button_deal = tk.Button(master=frame_new_applications, text='Добавить заявку', command=create_new_applications)
 	Button_deal.pack(side=tk.LEFT)
 
-	tree2= ttk.Treeview(work_frame, column=("column1", "column2", "column3", "column4", "column5", "column6", "column7"), show='headings')
-	tree2.heading("#1", text="id")
-	tree2.column("#1", minwidth=30, width=40)
-	tree2.heading("#2", text="Имя")
-	tree2.column("#2", minwidth=100, width=150)
-	tree2.heading("#3", text="Телефон")
-	tree2.column("#3", minwidth=100, width=100)
-	tree2.heading("#4", text="Создан")
-	tree2.column("#4", minwidth=100, width=150)
-	tree2.heading("#5", text="Источник")
-	tree2.column("#5", minwidth=100, width=130)
-	tree2.heading("#6", text="Ответственный")
-	tree2.column("#6", minwidth=100, width=100)
-	tree2.heading("#7", text="Комментарии")
-	tree2.column("#7", minwidth=100, width=100)
-	tree2.pack(expand=1, anchor=E, fill="both")
+	tree_new_applications= ttk.Treeview(work_frame, column=("column1", "column2", "column3", "column4", "column5", "column6", "column7"), show='headings')
+	tree_new_applications.heading("#1", text="id")
+	tree_new_applications.column("#1", minwidth=30, width=40)
+	tree_new_applications.heading("#2", text="Имя")
+	tree_new_applications.column("#2", minwidth=100, width=150)
+	tree_new_applications.heading("#3", text="Телефон")
+	tree_new_applications.column("#3", minwidth=100, width=100)
+	tree_new_applications.heading("#4", text="Создан")
+	tree_new_applications.column("#4", minwidth=100, width=150)
+	tree_new_applications.heading("#5", text="Источник")
+	tree_new_applications.column("#5", minwidth=100, width=130)
+	tree_new_applications.heading("#6", text="Ответственный")
+	tree_new_applications.column("#6", minwidth=100, width=100)
+	tree_new_applications.heading("#7", text="Комментарии")
+	tree_new_applications.column("#7", minwidth=100, width=100)
+	tree_new_applications.pack(expand=1, anchor=E, fill="both")
 	data = Lid.select(Lid.id, Lid.name, Lid.telephone_number, Lid.create_date, Lid.Source, Lid.responsible, Lid.comment)
 	for row in data:
-		tree2.insert("", tk.END, values=[row.id, row.name, row.telephone_number, row.create_date, row.Source, row.responsible, row.comment])
-
+		tree_new_applications.insert("", tk.END, values=[row.id, row.name, row.telephone_number, row.create_date, row.Source, row.responsible, row.comment])
+	# TableSearch(frame_new_applications, tree_new_applications, Lid, 'name', new_applications)
 ###-------------------------------------------------------------------------------------------------------------------------------------------------####
 
 def create_all_applications():
@@ -1064,35 +1116,43 @@ def create_all_applications():
 	Button_deal2.pack(side=tk.RIGHT)
 
 def all_applications():
-		clear_widget(work_frame)
-		new_applications = tk.Frame(master=work_frame, width=200, height=100, bg=color_frame_menu)
-		new_applications.pack(side=tk.TOP, fill='both')
-		Button_deal = tk.Button(master=new_applications, text='Добавить заявку', command=create_new_applications)
-		Button_deal.pack(side=tk.LEFT)
+	clear_widget(work_frame)
+	frame_all_applications = tk.Frame(master=work_frame, width=200, height=100, bg=color_frame_menu)
+	frame_all_applications.pack(side=tk.TOP, fill='both')
+	Button_deal = tk.Button(master=frame_all_applications, text='Добавить заявку', command=create_new_applications)
+	Button_deal.pack(side=tk.LEFT)
 
-		tree2= ttk.Treeview(work_frame, column=("column1", "column2", "column3", "column4", "column5", "column6", "column7", "column8"), show='headings')
-		tree2.heading("#1", text="id")
-		tree2.column("#1", minwidth=30, width=40)
-		tree2.heading("#2", text="Имя")
-		tree2.column("#2", minwidth=100, width=150)
-		tree2.heading("#3", text="Телефон")
-		tree2.column("#3", minwidth=100, width=100)
-		tree2.heading("#4", text="Создан")
-		tree2.column("#4", minwidth=100, width=150)
-		tree2.heading("#5", text="Источник")
-		tree2.column("#5", minwidth=100, width=130)
-		tree2.heading("#6", text="Ответственный")
-		tree2.column("#6", minwidth=100, width=100)
-		tree2.heading("#7", text="Комментарии")
-		tree2.column("#7", minwidth=100, width=100)
-		tree2.heading("#8", text="Статус")
-		tree2.column("#8", minwidth=100, width=100)
-		tree2.pack(expand=1, anchor=E, fill="both")
-		data = Lid.select()
-		for row in data:
-			tree2.insert("", tk.END, values=[row.id, row.name,
-				row.telephone_number, row.create_date, row.Source, row.responsible, row.comment, row.status])
+	tree_all_applications= ttk.Treeview(work_frame, column=("column1", "column2", "column3", "column4", "column5", "column6", "column7", "column8"), show='headings')
+	tree_all_applications.heading("#1", text="id")
+	tree_all_applications.column("#1", minwidth=30, width=40)
+	tree_all_applications.heading("#2", text="Имя")
+	tree_all_applications.column("#2", minwidth=100, width=150)
+	tree_all_applications.heading("#3", text="Телефон")
+	tree_all_applications.column("#3", minwidth=100, width=100)
+	tree_all_applications.heading("#4", text="Создан")
+	tree_all_applications.column("#4", minwidth=100, width=150)
+	tree_all_applications.heading("#5", text="Источник")
+	tree_all_applications.column("#5", minwidth=100, width=130)
+	tree_all_applications.heading("#6", text="Ответственный")
+	tree_all_applications.column("#6", minwidth=100, width=100)
+	tree_all_applications.heading("#7", text="Комментарии")
+	tree_all_applications.column("#7", minwidth=100, width=100)
+	tree_all_applications.heading("#8", text="Статус")
+	tree_all_applications.column("#8", minwidth=100, width=100)
+	tree_all_applications.pack(expand=1, anchor=E, fill="both")
+	data = Lid.select()
+	for row in data:
+		tree_all_applications.insert("", tk.END, values=[row.id, row.name,
+			row.telephone_number, row.create_date, row.Source, row.responsible, row.comment, row.status])
 
+	# TableSearch(frame_all_applications, tree_all_applications, Lid, 'name', all_applications)
+
+	# Взаимодействие с таблицей
+	def item_selected(event):
+		TableInteraction(frame_all_applications, tree_all_applications)
+
+	tree_all_applications.bind("<ButtonPress-3>", item_selected)
+	tree_all_applications.bind("<Return>", item_selected)	
 ###-------------------------------------------------------------------------------------------------------------------------------------------------####
 
 def info():  
