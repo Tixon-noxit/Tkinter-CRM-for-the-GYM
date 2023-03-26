@@ -407,7 +407,7 @@ def history_deal():
 										t.tip, t.source, t.date_the_start, 
 										t.responsible, t.comment))
 	# Поиск по таблице
-	TableSearch(frame_history_deal, tree, Deal, 'client_first_name', history_deal)
+	TableSearch(frame_history_deal, tree, Deal, 'Старые', history_deal)
 
 	def item_selected(event):
 		TableInteraction(frame_history_deal, tree)
@@ -459,7 +459,7 @@ def deal_now():
 										t.responsible, t.comment))
 
 	# Поиск по таблице
-	TableSearch(frame_deal_now, tree_deal_now, Deal, 'client_first_name', deal_now)
+	TableSearch(frame_deal_now, tree_deal_now, Deal, 'Новые', deal_now)
 
 	# Взаимодействие с таблицей
 	def item_selected(event):
@@ -470,93 +470,93 @@ def deal_now():
 
 """---------------------МОЖНО ЛИ С ЭТИМ ЧТО-ТО СДЕЛАТЬ?------------------------------------------------------------------------------------------------------ """
 	# Взаимодействие с таблицей
-	def item_selected(event): # Выделение фрагмента таблицы
-		def createNewWindow(arg):
-			# Файл лого для окон
-			# logo = 'Images/boxing.ico'
-			newWindow = Toplevel(frame_deal)
-			# labelExample = tk.Label(newWindow, text = arg[4])
-			newWindow.geometry('500x360+380+200')
-			# newWindow.iconbitmap(logo)
-			newWindow.title('Информация о сделке')
-			newWindow.resizable(False, False)
-			newWindow.focus_force()
-			newWindow.grab_set()
+	# def item_selected(event): # Выделение фрагмента таблицы
+	# 	def createNewWindow(arg):
+	# 		# Файл лого для окон
+	# 		# logo = 'Images/boxing.ico'
+	# 		newWindow = Toplevel(frame_deal)
+	# 		# labelExample = tk.Label(newWindow, text = arg[4])
+	# 		newWindow.geometry('500x360+380+200')
+	# 		# newWindow.iconbitmap(logo)
+	# 		newWindow.title('Информация о сделке')
+	# 		newWindow.resizable(False, False)
+	# 		newWindow.focus_force()
+	# 		newWindow.grab_set()
 
 
-			deal_var = Deal.get(Deal.id == arg[0])
+	# 		deal_var = Deal.get(Deal.id == arg[0])
 			
-			label_name = Label(newWindow, text = "id")
-			label_name.place(x=100, y=37, anchor="e", height=20, width=95, bordermode=OUTSIDE)
-			label_name = Label(newWindow, text = deal_var.id)
-			label_name.place(x=150, y=37, anchor="w", height=20, width=200, bordermode=OUTSIDE)
+	# 		label_name = Label(newWindow, text = "id")
+	# 		label_name.place(x=100, y=37, anchor="e", height=20, width=95, bordermode=OUTSIDE)
+	# 		label_name = Label(newWindow, text = deal_var.id)
+	# 		label_name.place(x=150, y=37, anchor="w", height=20, width=200, bordermode=OUTSIDE)
 		
-			labeljob = Label(newWindow, text = "Сумма:")
-			labeljob.place(x=100, y=67, anchor="e", height=20, width=95, bordermode=OUTSIDE)
-			labeljob = Label(newWindow, text = deal_var.summ)
-			labeljob.place(x=150, y=67, anchor="w", height=20, width=200, bordermode=OUTSIDE)
+	# 		labeljob = Label(newWindow, text = "Сумма:")
+	# 		labeljob.place(x=100, y=67, anchor="e", height=20, width=95, bordermode=OUTSIDE)
+	# 		labeljob = Label(newWindow, text = deal_var.summ)
+	# 		labeljob.place(x=150, y=67, anchor="w", height=20, width=200, bordermode=OUTSIDE)
 		
-			labelnum = Label(newWindow, text = "Стадия:")
-			labelnum.place(x=100, y=97, anchor="e", height=20, width=95, bordermode=OUTSIDE)
-			labelnum = Label(newWindow, text = deal_var.stady)
-			labelnum.place(x=150, y=97, anchor="w", height=20, width=200, bordermode=OUTSIDE)
+	# 		labelnum = Label(newWindow, text = "Стадия:")
+	# 		labelnum.place(x=100, y=97, anchor="e", height=20, width=95, bordermode=OUTSIDE)
+	# 		labelnum = Label(newWindow, text = deal_var.stady)
+	# 		labelnum.place(x=150, y=97, anchor="w", height=20, width=200, bordermode=OUTSIDE)
 		
-			labelnum1 = Label(newWindow, text = "Создана:")
-			labelnum1.place(x=100, y=127, anchor="e", height=20, width=95, bordermode=OUTSIDE)
-			labelnum1 = Label(newWindow, text = deal_var.create_date)
-			labelnum1.place(x=150, y=127, anchor="w", height=20, width=200, bordermode=OUTSIDE)
+	# 		labelnum1 = Label(newWindow, text = "Создана:")
+	# 		labelnum1.place(x=100, y=127, anchor="e", height=20, width=95, bordermode=OUTSIDE)
+	# 		labelnum1 = Label(newWindow, text = deal_var.create_date)
+	# 		labelnum1.place(x=150, y=127, anchor="w", height=20, width=200, bordermode=OUTSIDE)
 		
-			labelnum2 = Label(newWindow, text = "Клиент:")
-			labelnum2.place(x=100, y=157, anchor="e", height=20, width=95, bordermode=OUTSIDE)
-			labelnum2t = Label(newWindow, text = f'{deal_var.client_first_name} {deal_var.client_last_name}')
-			labelnum2t.place(x=150, y=157, anchor="w", height=20, width=200, bordermode=OUTSIDE)
+	# 		labelnum2 = Label(newWindow, text = "Клиент:")
+	# 		labelnum2.place(x=100, y=157, anchor="e", height=20, width=95, bordermode=OUTSIDE)
+	# 		labelnum2t = Label(newWindow, text = f'{deal_var.client_first_name} {deal_var.client_last_name}')
+	# 		labelnum2t.place(x=150, y=157, anchor="w", height=20, width=200, bordermode=OUTSIDE)
 		
-			labelnum3 = Label(newWindow, text = "Тип:")
-			labelnum3.place(x=100, y=187, anchor="e", height=20, width=95, bordermode=OUTSIDE)
-			labelnum3 = Label(newWindow, text = deal_var.tip)
-			labelnum3.place(x=150, y=187, anchor="w", height=20, width=200, bordermode=OUTSIDE)
+	# 		labelnum3 = Label(newWindow, text = "Тип:")
+	# 		labelnum3.place(x=100, y=187, anchor="e", height=20, width=95, bordermode=OUTSIDE)
+	# 		labelnum3 = Label(newWindow, text = deal_var.tip)
+	# 		labelnum3.place(x=150, y=187, anchor="w", height=20, width=200, bordermode=OUTSIDE)
 		
-			labelnum4 = Label(newWindow, text = "Источник:")
-			labelnum4.place(x=100, y=217, anchor="e", height=20, width=95, bordermode=OUTSIDE)
-			labelnum4 = Label(newWindow, text = deal_var.source)
-			labelnum4.place(x=150, y=217, anchor="w", height=20, width=200, bordermode=OUTSIDE)
+	# 		labelnum4 = Label(newWindow, text = "Источник:")
+	# 		labelnum4.place(x=100, y=217, anchor="e", height=20, width=95, bordermode=OUTSIDE)
+	# 		labelnum4 = Label(newWindow, text = deal_var.source)
+	# 		labelnum4.place(x=150, y=217, anchor="w", height=20, width=200, bordermode=OUTSIDE)
 
-			labelnum5 = Label(newWindow, text = "Дата начала:")
-			labelnum5.place(x=100, y=247, anchor="e", height=20, width=95, bordermode=OUTSIDE)
-			labelnum5 = Label(newWindow, text = deal_var.date_the_start)
-			labelnum5.place(x=150, y=247, anchor="w", height=20, width=200, bordermode=OUTSIDE)
+	# 		labelnum5 = Label(newWindow, text = "Дата начала:")
+	# 		labelnum5.place(x=100, y=247, anchor="e", height=20, width=95, bordermode=OUTSIDE)
+	# 		labelnum5 = Label(newWindow, text = deal_var.date_the_start)
+	# 		labelnum5.place(x=150, y=247, anchor="w", height=20, width=200, bordermode=OUTSIDE)
 
-			labelnum6 = Label(newWindow, text = "Ответственный:")
-			labelnum6.place(x=100, y=277, anchor="e", height=20, width=95, bordermode=OUTSIDE)
-			labelnum6 = Label(newWindow, text = deal_var.responsible)
-			labelnum6.place(x=150, y=277, anchor="w", height=20, width=200, bordermode=OUTSIDE)
+	# 		labelnum6 = Label(newWindow, text = "Ответственный:")
+	# 		labelnum6.place(x=100, y=277, anchor="e", height=20, width=95, bordermode=OUTSIDE)
+	# 		labelnum6 = Label(newWindow, text = deal_var.responsible)
+	# 		labelnum6.place(x=150, y=277, anchor="w", height=20, width=200, bordermode=OUTSIDE)
 
-			labelnum7 = Label(newWindow, text = "Комментарий:")
-			labelnum7.place(x=100, y=307, anchor="e", height=20, width=95, bordermode=OUTSIDE)
-			labelnum7 = Label(newWindow, text = deal_var.comment)
-			labelnum7.place(x=150, y=307, anchor="w", height=20, width=200, bordermode=OUTSIDE)
+	# 		labelnum7 = Label(newWindow, text = "Комментарий:")
+	# 		labelnum7.place(x=100, y=307, anchor="e", height=20, width=95, bordermode=OUTSIDE)
+	# 		labelnum7 = Label(newWindow, text = deal_var.comment)
+	# 		labelnum7.place(x=150, y=307, anchor="w", height=20, width=200, bordermode=OUTSIDE)
 
-			# Кнопки окна истории шкафчика
-			btn_history = Button(newWindow, text="Клиент", 
-					        	width=10, height=1, anchor="n")  # , command = lambda: history(arg,arg2)
-			btn_history.place(relx=0.60, y=337, anchor="e")
+	# 		# Кнопки окна истории шкафчика
+	# 		btn_history = Button(newWindow, text="Клиент", 
+	# 				        	width=10, height=1, anchor="n")  # , command = lambda: history(arg,arg2)
+	# 		btn_history.place(relx=0.60, y=337, anchor="e")
 		
-			btn_change = Button(newWindow, text="Изменить", 
-					        	width=10, height=1, anchor="n")  # , command = lambda: change(arg,arg2)
-			btn_change.place(relx=0.78, y=337, anchor="e")
+	# 		btn_change = Button(newWindow, text="Изменить", 
+	# 				        	width=10, height=1, anchor="n")  # , command = lambda: change(arg,arg2)
+	# 		btn_change.place(relx=0.78, y=337, anchor="e")
 		
-			btn_change = Button(newWindow, text="Удалить", 
-					        	width=10, height=1, anchor="n")  # , command = delete_locker
-			btn_change.place(relx=0.96, y=337, anchor="e")
+	# 		btn_change = Button(newWindow, text="Удалить", 
+	# 				        	width=10, height=1, anchor="n")  # , command = delete_locker
+	# 		btn_change.place(relx=0.96, y=337, anchor="e")
 
-		# Получение значений выбранной строки таблицы					
-		selected_people = ""																	
-		for selected_item in tree_deal_now.selection():									
-			item = tree_deal_now.item(selected_item)									
-			selected_people = item["values"]
-		createNewWindow(selected_people)
+	# 	# Получение значений выбранной строки таблицы					
+	# 	selected_people = ""																	
+	# 	for selected_item in tree_deal_now.selection():									
+	# 		item = tree_deal_now.item(selected_item)									
+	# 		selected_people = item["values"]
+	# 	createNewWindow(selected_people)
 
-	tree_deal_now.bind("<ButtonPress-3>", item_selected)
+	# tree_deal_now.bind("<ButtonPress-3>", item_selected)
 ###-------------------------------------------------------------------------------------------------------------------------------------------------####
  
 def create_trener():
@@ -867,39 +867,39 @@ def warehouse():  # Товар
 
 def inventory_control(): # Окно Складского учета
 	clear_widget(work_frame)
-	frame_deal = tk.Frame(master=work_frame, width=200, height=100, bg=color_frame_menu)
-	frame_deal.pack(side=tk.TOP, fill='both')
-	Button_deal = tk.Button(master=frame_deal, text='Создать оприходование')
+	frame_inventory_control = tk.Frame(master=work_frame, width=200, height=100, bg=color_frame_menu)
+	frame_inventory_control.pack(side=tk.TOP, fill='both')
+	Button_deal = tk.Button(master=frame_inventory_control, text='Создать оприходование')
 	Button_deal['state']='disabled'
 	Button_deal.pack(side=tk.LEFT)
-	Button_deal2 = tk.Button(master=frame_deal, text='Журнал')
+	Button_deal2 = tk.Button(master=frame_inventory_control, text='Журнал')
 	Button_deal2['state']='disabled'
 	Button_deal2.pack(side=tk.LEFT)
 
-	tree2= ttk.Treeview(work_frame, column=("column1", "column2", "column3", "column4",
+	tree_inventory_control= ttk.Treeview(work_frame, column=("column1", "column2", "column3", "column4",
 										"column5", "column6", "column7", "column8"), show='headings')
-	tree2.heading("#1", text="Название")
-	tree2.heading("#2", text="Номер документа основания")
-	tree2.heading("#3", text="Тип")
-	tree2.heading("#4", text="Статус")
-	tree2.heading("#5", text="Дата изменения")
-	tree2.heading("#6", text="Ответственный")
-	tree2.heading("#7", text="Поставщик")
-	tree2.heading("#8", text="Сумма")
-	tree2.pack(expand=1, anchor=NW, fill="both")
+	tree_inventory_control.heading("#1", text="Название")
+	tree_inventory_control.heading("#2", text="Номер документа основания")
+	tree_inventory_control.heading("#3", text="Тип")
+	tree_inventory_control.heading("#4", text="Статус")
+	tree_inventory_control.heading("#5", text="Дата изменения")
+	tree_inventory_control.heading("#6", text="Ответственный")
+	tree_inventory_control.heading("#7", text="Поставщик")
+	tree_inventory_control.heading("#8", text="Сумма")
+	tree_inventory_control.pack(expand=1, anchor=NW, fill="both")
 	# for row in rows:
 	# 	print(row) # it print all records in the database
-	# 	tree2.insert("", tk.END, values=row)
+	# 	tree_inventory_control.insert("", tk.END, values=row)
 	# conn.close()
 
 ###-------------------------------------------------------------------------------------------------------------------------------------------------####
 
 def create_services():
 	clear_widget(work_frame)
-	frame_services = tk.Frame(master=work_frame, width=200, height=100, bg=color_frame_menu)
-	frame_services.pack(side=tk.TOP, fill='both')
+	frame_create_services = tk.Frame(master=work_frame, width=200, height=100, bg=color_frame_menu)
+	frame_create_services.pack(side=tk.TOP, fill='both')
 
-	labelframe = LabelFrame(frame_services, text="Новая услуга")
+	labelframe = LabelFrame(frame_create_services, text="Новая услуга")
 	labelframe.pack(fill="both", expand="yes")
  
 	labelwork_frame = LabelFrame(labelframe, text="Об услуге")
@@ -939,9 +939,9 @@ def create_services():
 	frame.pack(side='top')
 	
 	Button_deal = tk.Button(master=frame, text='Сохранить', command=lambda: new_services(entry_name.get(), entry_description.get(),entry_retail_price.get(),
-																			entry_quantity.get(),frame_services, services))
+																			entry_quantity.get(),frame_create_services, services))
 	Button_deal.pack(side=tk.LEFT)
-	Button_deal2 = tk.Button(master=frame, text='Отмена', command=lambda: close_window(frame_services, services))
+	Button_deal2 = tk.Button(master=frame, text='Отмена', command=lambda: close_window(frame_create_services, services))
 	Button_deal2.pack(side=tk.RIGHT)
 
 

@@ -81,12 +81,22 @@ class TableSearch():
 				self.treeview.delete(f)
 		
 		try:
-			if self.DB == Deal:
-				db = self.DB.select().where(self.DB.client_first_name.contains(self.desired))
+
+			if self.DB == Deal and self.search_field == 'Новые':
+				now = datetime.now().strftime("%d.%m.%Y")
+				db = self.DB.select().where(self.DB.client_first_name.contains(self.desired), self.DB.date_the_start == now)
 				for d in db:
 					self.treeview.insert("", END, values=[d.id, d.summ, d.stady, 
 								d.create_date, d.client_first_name, d.client_last_name, d.tip, d.source, 
 								d.date_the_start, d.responsible, d.comment])
+
+			elif self.DB == Deal and self.search_field == 'Старые':
+				db = self.DB.select().where(self.DB.client_first_name.contains(self.desired))
+				for d in db:
+					self.treeview.insert("", END, values=[d.id, d.summ, d.stady, 
+								d.create_date, d.client_first_name, d.client_last_name, d.tip, d.source, 
+								d.date_the_start, d.responsible, d.comment])		
+
 
 			elif self.DB == Trener:	
 				db = self.DB.select().where(self.DB.First_Name.contains(self.desired))
