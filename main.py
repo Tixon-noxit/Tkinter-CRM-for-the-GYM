@@ -63,6 +63,45 @@ width = window.winfo_screenwidth()  # Ширина окна
 height = window.winfo_screenheight()  # Высота окна
 
 ###-------------------------------------------------------------------------------------------------------------------------------------------------####
+def passage_control():
+	clear_widget(work_frame)
+	frame_passage_control = tk.Frame(master=work_frame, width=200, height=100, bg=color_frame_menu)
+	frame_passage_control.pack(side=tk.TOP, fill='both')	
+	Button_clients = tk.Button(master=frame_passage_control, text='Добавить')
+	Button_clients.pack(side=tk.LEFT)
+	# Button_clients2 = tk.Button(master=frame_passage_control, text='Назад', command=clients)
+	# Button_clients2.pack(side=tk.LEFT)
+
+	tree_passage_control= ttk.Treeview(work_frame, column=("column1", "column2", "column3", "column4", "column5", "column6", "column6"), show='headings')
+	tree_passage_control.heading("#1", text="id")
+	tree_passage_control.column("#1", minwidth=40, width=40)
+	tree_passage_control.heading("#2", text="Фамилия")
+	tree_passage_control.heading("#3", text="Имя")
+	tree_passage_control.heading("#4", text="Телефон")
+	tree_passage_control.column("#4", minwidth=80, width=100)
+	tree_passage_control.heading("#5", text="Тип")
+	tree_passage_control.column("#5", minwidth=50, width=120)
+	tree_passage_control.heading("#6", text="Источник")
+	tree_passage_control.column("#6", minwidth=120, width=150)
+	tree_passage_control.heading("#7", text="Дата создания")
+	tree_passage_control.pack(expand=1, anchor=NW, fill="both")
+
+	# data = Contact.select().order_by(Contact.create_date)
+
+	# for row in data:
+	# 	tree_passage_control.insert("", tk.END, values=[row.id, row.First_Name, row.Last_Name, row.Phone_number, row.Type, row.Source, row.create_date])
+	
+	# TableSearch(frame_passage_control, tree_passage_control, Contact, 'Контакт', passage_control)
+
+	# # Взаимодействие с таблицей
+	# def item_selected(event):
+	# 	TableInteraction(frame_passage_control, passage_control)
+
+	# tree_passage_control.bind("<ButtonPress-3>", item_selected)
+	# tree_passage_control.bind("<Return>", item_selected)
+
+
+###-------------------------------------------------------------------------------------------------------------------------------------------------####
 
 def create_contact():
 	clear_widget(work_frame)
@@ -1205,6 +1244,9 @@ button_1_5.pack()
 button_1_6 = tk.Button(frame1_1, text="Лиды", font=font_button_menu, bg=color_button_menu, width=button_width)
 button_1_6['state'] = 'disabled'
 button_1_6.pack()
+button_1_7 = tk.Button(frame1_1, text="Контроль", font=font_button_menu, bg=color_button_menu, width=button_width, command=passage_control)
+# button_1_7['state'] = 'disabled'
+button_1_7.pack()
 
 lbl = Label(frame1_1, text="    Товары / Склад    ", font=font_lable_menu, bg=color_label_menu)  
 lbl.pack()
