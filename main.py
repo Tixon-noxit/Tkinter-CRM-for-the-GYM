@@ -78,7 +78,9 @@ def passage_control():
 		TABLE_NAME = 'FB_EVN'
 		SELECT = """SELECT FB_EVN.EKEY, FB_KEY_H.USR_FN, FB_EVN.DT from %s 
 				    INNER JOIN FB_KEY_H ON FB_KEY_H.ID = FB_EVN.EKEY 
-				    where EXTRACT(YEAR FROM FB_EVN.DT) = EXTRACT(YEAR FROM current_date)
+				    where EXTRACT(YEAR FROM FB_EVN.DT) = EXTRACT(YEAR FROM current_date) 
+				    and EXTRACT(MONTH FROM FB_EVN.DT) = EXTRACT(MONTH FROM current_date)
+				    and EXTRACT(DAY FROM FB_EVN.DT) = EXTRACT(DAY FROM current_date)
 				    order by FB_EVN.DT desc""" % TABLE_NAME
 
 		con = fdb.connect(dsn='C:/Program Files/ENT/Server/DB/CBASE.FDB', user='sysdba', password='masterkey')
