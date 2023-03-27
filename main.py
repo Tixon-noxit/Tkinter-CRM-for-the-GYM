@@ -63,6 +63,7 @@ width = window.winfo_screenwidth()  # Ширина окна
 height = window.winfo_screenheight()  # Высота окна
 
 ###-------------------------------------------------------------------------------------------------------------------------------------------------####
+# Если фокус на окне то обновлять окно каждые 2 секунды
 
 def passage_control():
 	clear_widget(work_frame)
@@ -77,7 +78,10 @@ def passage_control():
 	def check_passage():
 		TABLE_NAME = 'FB_EVN'
 		SELECT = """SELECT FB_EVN.EKEY, FB_KEY_H.USR_FN, FB_EVN.DT from %s 
-				    INNER JOIN FB_KEY_H ON FB_KEY_H.ID = FB_EVN.EKEY 
+				    INNER JOIN FB_KEY_H ON FB_KEY_H.ID = FB_EVN.EKEY
+
+				    -- INNER JOIN FB_KEY ON FB_KEY.ID = FB_ENV.EKEY
+
 				    where EXTRACT(YEAR FROM FB_EVN.DT) = EXTRACT(YEAR FROM current_date) 
 				    and EXTRACT(MONTH FROM FB_EVN.DT) = EXTRACT(MONTH FROM current_date)
 				    and EXTRACT(DAY FROM FB_EVN.DT) = EXTRACT(DAY FROM current_date)
@@ -86,18 +90,21 @@ def passage_control():
 		con = fdb.connect(dsn='C:/Program Files/ENT/Server/DB/CBASE.FDB', user='sysdba', password='masterkey')
 		cur_user = con.cursor()
 
-		try:
-			print('Соединение с БД CBASE.FBD установлено')
-		except:
-			print('Ошибка соединения!')
+		# try:
+			# print('Соединение с БД CBASE.FBD установлено')
+		# except:
+			# print('Ошибка соединения!')
 
 		cur_user.execute(SELECT)
 
-		try:
-			print('Успешный вывод данных из FB_USR')
-		except:
-			print('Ошибка вывода данных из FB_USR')
-	
+
+		# try:
+			# print('Успешный вывод данных из FB_USR')
+		# except:
+			# print('Ошибка вывода данных из FB_USR')
+
+
+			
 		user = cur_user.fetchall()
 		data = (row for row in user)
 		monitor = fdb.monitor.Monitor()
@@ -108,17 +115,20 @@ def passage_control():
 
 	if check_list == []:
 		check_passage()
-		print('Список проходов пуст!')
+		# print('Список проходов пуст!')
 	else:
 		pass
 		print(check_list)
-		
+			
+
+
 	headings = (
 		'Карта',
 		'ФИО',
-		'Дата посещения',)
+		'Дата посещения',
+		'Активен до:',)
 
-	table = ttk.Treeview(work_frame, show="headings", selectmode="browse")
+	table = ttk.Treeview(work_frame, show="headings", selectmode="browse", height=100)
 	table["columns"] = headings
 	table["displaycolumns"] = headings
 
@@ -134,27 +144,11 @@ def passage_control():
 	scrolltable = tk.Scrollbar(work_frame, command=table.yview)
 	table.configure(yscrollcommand=scrolltable.set)
 	scrolltable.pack(side=tk.RIGHT, fill=tk.Y)
-	table.pack(fill=tk.BOTH)
-	
-	
-	# tree_passage_control= ttk.Treeview(work_frame, column=("column1", "column2", "column3", "column4", "column5", "column6", "column6"), show='headings')
-	# tree_passage_control.heading("#1", text="id")
-	# tree_passage_control.column("#1", minwidth=40, width=40)
-	# tree_passage_control.heading("#2", text="Фамилия")
-	# tree_passage_control.heading("#3", text="Имя")
-	# tree_passage_control.heading("#4", text="Телефон")
-	# tree_passage_control.column("#4", minwidth=80, width=100)
-	# tree_passage_control.heading("#5", text="Тип")
-	# tree_passage_control.column("#5", minwidth=50, width=120)
-	# tree_passage_control.heading("#6", text="Источник")
-	# tree_passage_control.column("#6", minwidth=120, width=150)
-	# tree_passage_control.heading("#7", text="Дата создания")
-	# tree_passage_control.pack(expand=1, anchor=NW, fill="both")
+	# table.pack(fill=tk.BOTH)
+	table.pack(side=TOP)
 
-	# data = Contact.select().order_by(Contact.create_date)
-
-	# for row in data:
-	# 	tree_passage_control.insert("", tk.END, values=[row.id, row.First_Name, row.Last_Name, row.Phone_number, row.Type, row.Source, row.create_date])
+	left = Label(frame_passage_control, text=f'Клиентов сегодня: {len(set(check_list))}')
+	left.pack(side=tk.LEFT)
 	
 	# TableSearch(frame_passage_control, tree_passage_control, Contact, 'Контакт', passage_control)
 
