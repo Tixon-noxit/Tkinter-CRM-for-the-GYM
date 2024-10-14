@@ -1,0 +1,5 @@
+Babel==2.12.1
+peewee==3.16.0
+Pillow==9.4.0
+tkcalendar==1.6.1
+ttkwidgets==0.13.0
